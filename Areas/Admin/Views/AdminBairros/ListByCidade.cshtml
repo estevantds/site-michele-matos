@@ -1,0 +1,54 @@
+﻿@model IEnumerable<MiMatos.Models.Bairro>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@{
+    var cidade = Model.FirstOrDefault().NomeCidade;
+}
+
+<h1>Bairros por cidade</h1>
+<h2>@cidade</h2>
+
+<p>
+    <a class="btn btn-dark" asp-action="Create">+ Adicionar Novo</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                Cidade
+            </th>
+            <th>
+                Estado
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomeCidade)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SiglaEstado)
+                </td>
+                <td>
+                    <div class="row">
+                        <a class="btn btn-warning col" asp-action="Edit" asp-route-id="@item.BairroId">Edit</a>
+                        <a class="btn btn-danger col" asp-action="Delete" asp-route-id="@item.BairroId">Delete</a>
+                    </div>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

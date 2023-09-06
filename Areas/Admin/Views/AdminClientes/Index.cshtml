@@ -1,0 +1,54 @@
+﻿@model IEnumerable<MiMatos.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Lista de Clientes</h1>
+
+<p>
+    <a class="btn btn-dark" asp-action="Create">+ Adicionar Cliente</a>
+</p>
+@foreach (var item in Model) {
+    <div class="card shadow-lg col-md-12">
+        <div class="card-body">
+            <h3 class="card-title">@item.Nome
+                @if (!item.Visualizado)
+                {
+                    <span class="badge bg-success">Novo!</span>
+                }
+            </h3>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><b>Mensagem/Anotações</b> @item.Mensagem</li>
+                <li class="list-group-item">
+                    <b>Telefone:</b> @item.Celular
+                    @if (item.IsWhatsApp)
+                    {
+                        <i class="bi bi-whatsapp"></i>
+                    }
+                </li>
+                <li class="list-group-item"><b>Outro Telefone</b> @item.OutroTelefone</li>
+                <li class="list-group-item"><b>e-mail:</b> @item.Email</li>
+                <li class="list-group-item"><b>Nascimento:</b> @item.Nascimento</li>
+                <li class="list-group-item"><b>Data de Cadastro:</b> @item.CriadoEm</li>
+                <li class="list-group-item"><b>Última Edição:</b> @item.AtualizadoEm</li>
+                <li class="list-group-item">
+                    @if (item.CadastroSite)
+                    {
+                        <b>Cadastrado pelo site</b>
+                    }
+                    else
+                    {
+                        <b>Cadastrado pelo sistema</b>
+                    }
+                </li>
+            </ul>
+            <hr />
+            <div class="d-flex">
+                <div class="col-md-12 text-end">
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ClienteId">Editar</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ClienteId">Deletar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

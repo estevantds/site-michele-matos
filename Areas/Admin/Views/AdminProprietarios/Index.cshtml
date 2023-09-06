@@ -1,0 +1,45 @@
+﻿@model IEnumerable<MiMatos.Models.Proprietario>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Proprietários</h1>
+<hr />
+<p>
+    <a class="btn btn-dark" asp-action="Create">+ Novo Proprietário</a>
+</p>
+<div class="Container">
+    @foreach (var item in Model)
+    {
+        <div class="card shadow-lg col-md-12">
+            <div class="card-body">
+                <h3 class="card-title">@item.Nome</h3>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <b>Telefone:</b> @item.Celular 
+                        @if (item.IsWhatsApp)
+                        {
+                            <i class="bi-whatsapp"></i>
+                        }
+                    </li>
+                    <li class="list-group-item"><b>Outro Telefone</b> @item.OutroTelefone</li>
+                    <li class="list-group-item"><b>e-mail:</b> @item.Email</li>
+                    <li class="list-group-item"><b>Nascimento:</b> @item.Nascimento</li>
+                    <li class="list-group-item"><b>Data de Cadastro:</b> @item.CriadoEm</li>
+                    <li class="list-group-item"><b>Última Edição:</b> @item.AtualizadoEm</li>
+                    <li class="list-group-item"><small><b>CPF:</b> @item.CPF</small></li>
+                    <li class="list-group-item"><small><b>RG:</b> @item.RG</small></li>
+                </ul>
+                <hr />
+                <div class="d-flex">
+                    <div class="col-md-12 text-end">
+                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ProprietarioId">Editar</a>
+                        <a class="btn btn-info" asp-controller="AdminPropriedades" asp-action="ListByProprietario" asp-route-id="@item.ProprietarioId">Ver Imóveis</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ProprietarioId">Apagar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

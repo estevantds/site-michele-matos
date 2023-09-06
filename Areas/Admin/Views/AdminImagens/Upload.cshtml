@@ -1,0 +1,19 @@
+﻿@model MiMatos.ViewModels.ImagemViewModel
+
+@{
+    ViewData["Title"] = "Upload";
+}
+
+<form action="Upload" method="post" enctype="multipart/form-data">
+    <div class="form-group col-md-4">
+        <label for="formFile" class="form-label"><h4>Adicionar imagens</h4></label>
+        <input class="form-control" type="file" name="images" id="formFile" multiple>
+        <small>Somente arquivos .jpg, .jpeg, .png, .bmp ou .svg. </small>
+    </div>
+    <input asp-for="@Model.PropriedadeId" type="text" value="@Model.PropriedadeId" hidden>
+    <hr />
+    <div class="form-group">
+        <input type="submit" value="Carregar" class="btn btn-primary" />
+        <a href="javascript: history.go(-1)" class="btn btn-outline-dark">Cancelar</a>
+    </div>
+</form>

@@ -1,0 +1,39 @@
+﻿@model IEnumerable<MiMatos.Models.Imagem>
+@{
+    var propriedadeId = Model.FirstOrDefault().PropriedadeId;
+}
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Gerenciamento de imagens</h1>
+
+<p>
+    <a class="btn btn-dark" asp-action="Upload" asp-route-id="@propriedadeId">+ Adicionar</a>
+</p>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card">
+                <img src="@item.Caminho" class="card-img-top" alt="...">
+                <div class="card-footer">
+                    <div class="col">
+                        @if (item.Destaque)
+                        {
+                            <button disabled class="btn btn-outline-dark">Destacar</button>
+                        }
+                        else
+                        {
+                            <a asp-action="Destaque" asp-route-id="@item.ImagemId" class="btn btn-outline-dark">Destacar</a>
+                        }
+                    </div>
+                    <div class="col">
+                        <a asp-action="Delete" asp-route-id="@item.ImagemId" class="btn btn-outline-danger">Deletar</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>

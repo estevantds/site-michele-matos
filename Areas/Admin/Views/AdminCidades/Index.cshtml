@@ -1,0 +1,44 @@
+﻿@model IEnumerable<MiMatos.Models.Cidade>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Cidades</h1>
+
+<p>
+    <a class="btn btn-dark" asp-action="Create">+ Adicionar Nova</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                Estado
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado.Sigla)
+                </td>
+                <td>
+                    <div class="row">
+                        <a class="btn btn-warning col" asp-action="Edit" asp-route-id="@item.CidadeId">Editar</a>
+                        <a class="btn btn-danger col" asp-action="Delete" asp-route-id="@item.CidadeId">Deletar</a>
+                        <a class="btn btn-secondary col" asp-controller="AdminBairros" asp-action="ListByCidade" asp-route-id="@item.CidadeId">Ver Bairros</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

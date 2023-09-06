@@ -1,0 +1,196 @@
+﻿@model MiMatos.Models.Propriedade
+@{
+    ViewData["Title"] = "Novo Imóvel";
+}
+
+<h1>Novo Cadastro</h1>
+<small>Antes de seguir com o cadastro, certifique-se que o 
+    <a asp-controller="AdminTipos" asp-action="Index">Tipo de Imóvel</a>, 
+    <a asp-controller="AdminProprietarios" asp-action="Index">Proprietário</a> e 
+    <a asp-controller="AdminLocalidades" asp-action="Index">Localidade</a> tenham sidos previamente cadastrados.
+</small>
+<h4>Imóvel</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label asp-for="Tipo" class="control-label"></label>
+                    <select filter="true" asp-for="Tipo" asp-items="Model.Tipos" class="form-select"></select>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="@Model.NomeProprietario" class="control-label">Proprietário</label>
+                    <select filter="true" asp-for="@Model.NomeProprietario" asp-items="Model.Proprietarios" class="form-select"></select>
+                </div>
+            </div>
+            <hr />
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label asp-for="Titulo" class="control-label"></label>
+                    <input asp-for="Titulo" class="form-control" />
+                    <span asp-validation-for="Titulo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <label asp-for="Descricao" class="control-label"></label>
+                    <textarea asp-for="Descricao" class="form-control"></textarea>
+                    <span asp-validation-for="Descricao" class="text-danger"></span>
+                </div>
+            </div>
+            <br />
+            <div class="form-group col-md-12">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label asp-for="QtdeQuartos" class="control-label"></label>
+                        <input asp-for="QtdeQuartos" class="form-control" step="1" min="0" max="25" value="0" />
+                        <span asp-validation-for="QtdeQuartos" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2">
+                        <label asp-for="QtdeSuites" class="control-label"></label>
+                        <input asp-for="QtdeSuites" class="form-control" step="1" min="0" max="25" value="0" />
+                        <span asp-validation-for="QtdeSuites" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2">
+                        <label asp-for="QtdeBanheiros" class="control-label"></label>
+                        <input asp-for="QtdeBanheiros" class="form-control" step="1" min="0" max="25" value="0" />
+                        <span asp-validation-for="QtdeBanheiros" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label asp-for="PrecoLocacao" class="control-label"></label>
+                            <input asp-for="PrecoLocacao" class="form-control" step="1" min="0" value="0" />
+                            <span asp-validation-for="PrecoLocacao" class="text-danger"></span>
+                        </div>
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="ParaLocacao" /> @Html.DisplayNameFor(model => model.ParaLocacao)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label asp-for="PrecoVenda" class="control-label"></label>
+                            <input asp-for="PrecoVenda" class="form-control" step="1" min="0" value="0" />
+                            <span asp-validation-for="PrecoVenda" class="text-danger"></span>
+                        </div>
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="ParaVenda" /> @Html.DisplayNameFor(model => model.ParaVenda)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label asp-for="AreaTotal" class="control-label"></label>
+                    <input asp-for="AreaTotal" class="form-control" />
+                    <span asp-validation-for="AreaTotal" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="AreaContruida" class="control-label"></label>
+                    <input asp-for="AreaContruida" class="form-control" />
+                    <span asp-validation-for="AreaContruida" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="CapacidadeGaragem" class="control-label"></label>
+                        <input asp-for="CapacidadeGaragem" class="form-control" step="1" min="0" max="25" value="0" />
+                        <span asp-validation-for="CapacidadeGaragem" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="TemGaragem" /> @Html.DisplayNameFor(model => model.TemGaragem)
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="TemQuintal" /> @Html.DisplayNameFor(model => model.TemQuintal)
+                        </label>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="TemPiscina" /> @Html.DisplayNameFor(model => model.TemPiscina)
+                        </label>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="TemQuadra" /> @Html.DisplayNameFor(model => model.TemQuadra)
+                        </label>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="TemSalaoFesta" /> @Html.DisplayNameFor(model => model.TemSalaoFesta)
+                        </label>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="TemAreaGourmet" /> @Html.DisplayNameFor(model => model.TemAreaGourmet)
+                        </label>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="TemChurrasqueira" /> @Html.DisplayNameFor(model => model.TemChurrasqueira)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <label asp-for="CEP" class="control-label"></label>
+                    <input asp-for="CEP" class="form-control" data-mask="00000-000" placeholder="_____-___" />
+                    <span asp-validation-for="CEP" class="text-danger"></span>
+                </div>
+                <div class="col-md-10">
+                    <label asp-for="Bairro" class="control-label"></label>
+                    <select filter="true" asp-for="Bairro" asp-items="Model.Localidades" class="form-select"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-9">
+                    <label asp-for="Logradouro" class="control-label"></label>
+                    <input asp-for="Logradouro" class="form-control" />
+                    <span asp-validation-for="Logradouro" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label asp-for="Numero" class="control-label"></label>
+                    <input asp-for="Numero" class="form-control" />
+                    <span asp-validation-for="Numero" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label asp-for="Complemento" class="control-label"></label>
+                    <input asp-for="Complemento" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="EmCondominio" /> @Html.DisplayNameFor(model => model.EmCondominio)
+                </label>
+            </div>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Cadastrar" class="btn btn-outline-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<div>
+    <a class="btn btn-outline-dark" asp-action="Index">Cancelar</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

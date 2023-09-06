@@ -1,0 +1,33 @@
+﻿@model MiMatos.Models.Proprietario
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="card shadow-lg col-md-12">
+    <div class="card-body">
+        <h3 class="card-title">Nome</h3>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <b>Telefone:</b> Celular
+                @if (Model.IsWhatsApp)
+                {
+                    <i class="bi bi-whatsapp"></i>
+                }
+            </li>
+            <li class="list-group-item"><b>Outro Telefone</b> @Model.OutroTelefone</li>
+            <li class="list-group-item"><b>e-mail:</b> @Model.Email</li>
+            <li class="list-group-item"><b>Nascimento:</b> @Model.Nascimento</li>
+            <li class="list-group-item"><b>Data de Cadastro:</b> @Model.CriadoEm</li>
+            <li class="list-group-item"><b>Última Edição:</b> @Model.AtualizadoEm</li>
+            <li class="list-group-item"><small><b>CPF:</b> @Model.CPF</small></li>
+            <li class="list-group-item"><small><b>RG:</b> @Model.RG</small></li>
+        </ul>
+        <hr />
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="ProprietarioId" />
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <a asp-action="Index" class="btn btn-dark">Cancelar</a>
+        </form>
+    </div>
+</div>

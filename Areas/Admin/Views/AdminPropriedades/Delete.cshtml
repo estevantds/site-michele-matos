@@ -1,0 +1,110 @@
+﻿@model MiMatos.Models.Propriedade
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Deletar</h1>
+
+<h4>Imóvel</h4>
+
+<div class="card mb-3 shadow-lg" style="min-height: 250px;">
+    <div class="row no-gutters">
+        <div class="col-4">
+            @if (Model.CaminhoImagem != "")
+            {
+                <img src=CaminhoImagem
+                 class="img-fluid rounded-start"
+                 alt="Imagem do Imóvel">
+            }
+            else
+            {
+                <img src="/images/not-found.png"
+                 class="img-fluid rounded-start"
+                 alt="Nenhuma Imagem">
+            }
+        </div>
+        <div class="col-8">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9">
+                        @if (Model.ParaVenda)
+                        {
+                            <span class="badge bg-success">Venda</span>
+                        }
+                        @if (Model.ParaLocacao)
+                        {
+                            <span class="badge bg-danger">Locação</span>
+                        }
+                        @if (!(Model.Vendido || Model.Locado))
+                        {
+                            <span class="badge bg-success">Disponível</span>
+                        }
+                    </div>
+                    <div class="col-md-3">
+                        <span>Código: @Model.Codigo</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>@Model.Tipo, @Model.Bairro, @Model.Cidade - @Model.Estado</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <small>Preço de venda</small>
+                        <h3>R$ @Model.PrecoVenda</h3>
+                    </div>
+                    <div class="col-md-6">
+                        <small>Preço de Locação</small>
+                        <h3>R$ @Model.PrecoLocacao</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <ul class="col-12 list-group list-group-horizontal ">
+                            <li class="list-group-item">Dormitórios <span class="badge bg-primary rounded-pill">@Model.QtdeQuartos</span></li>
+                            <li class="list-group-item">Banheiros <span class="badge bg-primary rounded-pill">@Model.QtdeBanheiros</span></li>
+                            <li class="list-group-item">Garagem <span class="badge bg-primary rounded-pill">@Model.CapacidadeGaragem</span></li>
+                        </ul>
+                    </div>
+                    <br />
+                    <div>
+                        <ul class="col-md-3 list-group list-group-flush">
+                            @if (Model.TemQuintal)
+                            {
+                                <li class="list-group-item">Quintal</li>
+                            }
+                            @if (Model.TemPiscina)
+                            {
+                                <li class="list-group-item">Piscina</li>
+                            }
+                            @if (Model.TemQuadra)
+                            {
+                                <li class="list-group-item">Quadra Esportiva</li>
+                            }
+                            @if (Model.TemSalaoFesta)
+                            {
+                                <li class="list-group-item">Salão de Festa</li>
+                            }
+                            @if (Model.TemAreaGourmet)
+                            {
+                                <li class="list-group-item">Área Gourmet</li>
+                            }
+                            @if (Model.TemChurrasqueira)
+                            {
+                                <li class="list-group-item">Churrasqueira</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="PropriedadeId" />
+                    <input type="submit" value="Delete" class="btn btn-danger" />
+                    <a asp-action="Index" class="btn btn-dark">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

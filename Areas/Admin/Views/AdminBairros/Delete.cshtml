@@ -1,0 +1,39 @@
+﻿@model MiMatos.Models.Bairro
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Deletar</h1>
+
+<h3>Tem certeza que deseja Deletar esse Bairro?</h3>
+<div>
+    <h4>Type</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cidade.Nome)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cidade.Nome)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cidade.Estado.Sigla)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cidade.Estado.Sigla)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="BairroId" />
+        <input type="submit" value="Deletar" class="btn btn-danger" /> |
+        <a class="btn btn-dark" asp-action="Index">Cancelar</a>
+    </form>
+</div>

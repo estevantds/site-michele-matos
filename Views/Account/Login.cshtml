@@ -1,0 +1,33 @@
+﻿@model MiMatos.ViewModels.LoginViewModel
+
+<div class="row">
+    <div class="col-md-6">
+    <h4>Área de Login</h4>
+        <hr />
+        <h5>Atenção</h5>
+        <p>Somente usuários autorizados pelo Administrador.</p>
+        <p>Ao se cadastrar, seu acesso passará pela aprovação do Administrador.</p>
+        <p>Se seu cadastro foi solicitado pelo Administrador, <a asp-controller="Account" asp-action="Register">clique aqui</a></p>
+    </div>
+    <div class="col-md-6">
+    <h4>Login</h4>
+        <hr />
+        <form asp-controller="Account" asp-action="Login" method="post" class="form-horizontal">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="ReturnUrl" />
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Login" />
+            </div>
+        </form>
+    </div>
+</div>

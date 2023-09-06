@@ -1,0 +1,135 @@
+﻿@model IEnumerable<MiMatos.Models.Propriedade>
+
+@{
+    ViewData["Title"] = "Imóveis - Gerenciar";
+}
+
+@{
+    var proprietario = Model.FirstOrDefault();
+}
+
+@if (Model.AsEnumerable().Count().Equals(0))
+{
+    <span>Nenhum Imóvel foi cadastrado.</span>
+}
+else
+{
+    <h1>Lista de Imóveis de @proprietario.NomeProprietario</h1>
+    <hr />
+    foreach (var item in Model)
+    {
+        <div class="card mb-3 shadow-lg" style="min-height: 250px;">
+            <div class="row no-gutters">
+                <div class="col-4">
+                    @if (item.CaminhoImagem != "")
+                    {
+                        <img src=@item.CaminhoImagem
+                 class="img-fluid rounded-start"
+                 alt="Imagem do Imóvel">
+                    }
+                    else
+                    {
+                        <img src="/images/not-found.png"
+                 class="img-fluid rounded-start"
+                 alt="Nenhuma Imagem">
+                    }
+                </div>
+                <div class="col-8">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-9">
+                                @if (item.ParaVenda)
+                                {
+                                    <span class="badge bg-success">Venda</span>
+                                }
+                                @if (item.ParaLocacao)
+                                {
+                                    <span class="badge bg-danger">Locação</span>
+                                }
+                                @if (!(item.Vendido || item.Locado))
+                                {
+                                    <span class="badge bg-success">Disponível</span>
+                                }
+                            </div>
+                            <div class="col-md-3">
+                                <span>Código: @item.Codigo</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3>@item.Tipo, @item.Bairro, @item.Cidade - @item.Estado</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small>Preço de venda</small>
+                                <h3>R$ @item.PrecoVenda</h3>
+                            </div>
+                            <div class="col-md-6">
+                                <small>Preço de Locação</small>
+                                <h3>R$ @item.PrecoLocacao</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <ul class="col-12 list-group list-group-horizontal ">
+                                    <li class="list-group-item">Dormitórios <span class="badge bg-primary rounded-pill">@item.QtdeQuartos</span></li>
+                                    <li class="list-group-item">Banheiros <span class="badge bg-primary rounded-pill">@item.QtdeBanheiros</span></li>
+                                    <li class="list-group-item">Garagem <span class="badge bg-primary rounded-pill">@item.CapacidadeGaragem</span></li>
+                                </ul>
+                            </div>
+                            <br />
+                            <div>
+                                <ul class="col-md-3 list-group list-group-flush">
+                                    @if (item.TemQuintal)
+                                    {
+                                        <li class="list-group-item">Quintal</li>
+                                    }
+                                    @if (item.TemPiscina)
+                                    {
+                                        <li class="list-group-item">Piscina</li>
+                                    }
+                                    @if (item.TemQuadra)
+                                    {
+                                        <li class="list-group-item">Quadra Esportiva</li>
+                                    }
+                                    @if (item.TemSalaoFesta)
+                                    {
+                                        <li class="list-group-item">Salão de Festa</li>
+                                    }
+                                    @if (item.TemAreaGourmet)
+                                    {
+                                        <li class="list-group-item">Área Gourmet</li>
+                                    }
+                                    @if (item.TemChurrasqueira)
+                                    {
+                                        <li class="list-group-item">Churrasqueira</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="d-flex">
+                            <h5 class="col-md-6">Proprietário: @item.NomeProprietario</h5>
+                            <div class="col-md-6 text-end">
+                                @if (item.CaminhoImagem != "")
+                                {
+                                    <a class="btn btn-outline-dark" asp-action="Index" asp-controller="AdminImagens" asp-route-id="@item.PropriedadeId" aria-disabled="true">Gerenciar Imagens</a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-outline-dark" asp-action="Upload" asp-controller="AdminImagens" asp-route-id="@item.PropriedadeId">Carregar Imagens</a>
+                                }
+                                <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.PropriedadeId">Detalhes</a>
+                                <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.PropriedadeId">Editar</a>
+                                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.PropriedadeId">Remover</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<a class="btn btn-outline-primary" asp-controller="AdminProprietarios" asp-action="Index">Voltar para Proprietários</a>

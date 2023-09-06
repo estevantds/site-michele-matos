@@ -1,0 +1,36 @@
+﻿@model IEnumerable<MiMatos.Models.Condominio>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Condomínios</h1>
+<hr />
+<p>
+    <a class="btn btn-dark" asp-action="Create">+ Novo Condomínio</a>
+</p>
+<div class="Container">
+    @foreach (var item in Model)
+    {
+        <div class="card shadow-lg col-md-12">
+            <div class="card-body">
+                <h3 class="card-title">@item.Nome</h3>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><b>Logradouro:</b> @item.Logradouro</li>
+                    <li class="list-group-item"><b>Número:</b> @item.Numero</li>
+                    <li class="list-group-item"><b>Localidade:</b> @item.Localidade</li>
+                    <li class="list-group-item"><b>Criado em:</b> @item.CriadoEm</li>
+                    <li class="list-group-item"><b>Atualizado em:</b> @item.AtualizadoEm</li>
+                </ul>
+                <hr />
+                <div class="d-flex">
+                    <div class="col-md-12 text-end">
+                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.CondominioId">Editar</a>
+                            <a class="btn btn-info" asp-controller="AdminPropriedades" asp-action="ListByCondominio" asp-route-id="@item.CondominioId">Ver Imóveis</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.CondominioId">Apagar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

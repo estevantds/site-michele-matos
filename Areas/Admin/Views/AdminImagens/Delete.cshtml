@@ -1,0 +1,15 @@
+﻿@model MiMatos.Models.Imagem
+
+@{
+    ViewData["Title"] = "Delete";
+}
+<h1>Deletar Imagem</h1>
+<h3>Tem certeza que deseja apagar essa imagem?</h3>
+<hr />
+<img src="@Model.Caminho" alt="...">
+<hr />
+<form asp-action="Delete">
+    <input type="hidden" asp-for="@Model.ImagemId" />
+    <input type="submit" value="Deletar" class="btn btn-danger" />
+    <a href="javascript: history.go(-1)" class="btn btn-outline-dark">Cancelar</a>
+</form>

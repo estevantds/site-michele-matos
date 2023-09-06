@@ -1,0 +1,33 @@
+﻿@model MiMatos.ViewModels.ClienteViewModel
+
+<h3>Oi, Mi!! Aqui é sua Área de Administração</h3>
+<h4>Escolha uma opção:</h4>
+
+<div class="row">
+    <a class="btn btn-outline-dark col-md-3" asp-area="Admin" asp-controller="AdminPropriedades" asp-action="Index">
+        Propriedades
+    </a>
+    <a class="btn btn-outline-dark col-md-3" asp-area="Admin" asp-controller="AdminTipos" asp-action="Index">
+        Tipos
+    </a>
+    <a class="btn btn-outline-dark col-md-3" asp-area="Admin" asp-controller="AdminProprietarios" asp-action="Index">
+        Proprietários
+    </a>
+    <a class="btn btn-outline-dark col-md-3" asp-area="Admin" asp-controller="AdminLocalidades" asp-action="Index">
+        Localidades
+    </a>
+    <a class="btn btn-outline-dark position-relative col-md-3" asp-area="Admin" asp-controller="AdminClientes" asp-action="Index">
+        Clientes
+        @if (Model.TemNovo)
+        {
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                @Model.Total
+                <span class="visually-hidden">unread messages</span>
+            </span>
+        }
+    </a>
+</div>
+<hr />
+<div>
+    <a class="btn btn-outline-primary col-md-12" asp-area="" asp-controller="Home" asp-action="Index">Ver site</a>
+</div>

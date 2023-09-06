@@ -1,0 +1,16 @@
+﻿@model MiMatos.Models.Imagem
+
+@{
+    ViewData["Title"] = "Destacar";
+}
+<h1>Destacar Imagem</h1>
+<h3>Tem certeza que deseja tornar a imagem como destaque?</h3>
+<small>Somente uma imagem do imóvel poderá ser destaque</small>
+<hr />
+<img src="@Model.Caminho" alt="...">
+<hr />
+<form asp-action="Destaque">
+    <input type="hidden" asp-for="@Model.ImagemId" />
+    <input type="submit" value="Destacar" class="btn btn-primary" />
+    <a href="javascript: history.go(-1)" class="btn btn-outline-dark">Cancelar</a>
+</form>
