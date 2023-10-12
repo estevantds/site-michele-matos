@@ -8,5 +8,6 @@ namespace MiMatos.Repositories.Interfaces
         IEnumerable<Propriedade> PropriedadesDisponiveis { get; }
         IEnumerable<Propriedade> PropriedadesDisponiveisRecemAdicionadas();
         Propriedade GetPropriedadeByCodigo(string codigo);
+        Propriedade GetPropriedadeById(int? id);
     }
 }

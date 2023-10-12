@@ -15,23 +15,26 @@
     @foreach (var item in Model)
     {
         <div class="col">
-            <div class="card">
-                <img src="@item.Caminho" class="card-img-top" alt="...">
+            <div class="card" style="width: 20rem;">
+                <div style="height: 25em">
+                    <img src="@item.Caminho" class="img-thumbnail" alt="@item.Caminho">
+                </div>
                 <div class="card-footer">
-                    <div class="col">
-                        @if (item.Destaque)
-                        {
-                            <button disabled class="btn btn-outline-dark">Destacar</button>
-                        }
-                        else
-                        {
-                            <a asp-action="Destaque" asp-route-id="@item.ImagemId" class="btn btn-outline-dark">Destacar</a>
-                        }
+                    <div class="row justify-content-start">
+                        <div class="col">
+                            @if (item.Destaque)
+                            {
+                                <button disabled class="btn btn-outline-dark">Destacar</button>
+                            }
+                            else
+                            {
+                                <a asp-action="Destaque" asp-route-id="@item.ImagemId" class="btn btn-outline-dark">Destacar</a>
+                            }
+                        </div>
+                        <div class="col">
+                            <a asp-action="Delete" asp-route-id="@item.ImagemId" class="btn btn-outline-danger">Deletar</a>
+                        </div>
                     </div>
-                    <div class="col">
-                        <a asp-action="Delete" asp-route-id="@item.ImagemId" class="btn btn-outline-danger">Deletar</a>
-                    </div>
-
                 </div>
             </div>
         </div>

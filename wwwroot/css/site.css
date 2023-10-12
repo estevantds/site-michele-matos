@@ -26,3 +26,7 @@ footer {
 .btn {
     margin: 10px;
 }
+
+#img-blured {
+    filter: blur(4px);
+}

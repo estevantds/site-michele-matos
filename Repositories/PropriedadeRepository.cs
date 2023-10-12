@@ -66,5 +66,42 @@ namespace MiMatos.Repositories
         {
             return _context.Propriedades.FirstOrDefault(p => p.Codigo == codigo);
         }
+
+        public Propriedade GetPropriedadeById(int? id )
+        {
+            var propriedade = _context.Propriedades.Find(id);
+
+            var imagens = _context.Imagens.Where(i => i.PropriedadeId == id).ToList();
+
+            if (imagens.Count() > 0)
+            {
+                var destaques = imagens.Where(i => i.Destaque);
+                if (destaques.Count() > 0)
+                {
+                    foreach (var imagem in destaques)
+                    {
+                        if (imagem.Destaque)
+                        {
+                            propriedade.CaminhoImagem = imagem.Caminho;
+                        }
+                    }
+                }
+                else
+                {
+                    propriedade.CaminhoImagem = imagens.FirstOrDefault().Caminho;
+                }
+
+                foreach (var imagem in imagens)
+                {
+                    propriedade.CaminhosImagens.Add(imagem.Caminho);
+                }
+            }
+            else
+            {
+                propriedade.CaminhoImagem = "/images/preparando-imovel.png";
+            }
+
+            return propriedade;
+        }
     }
 }

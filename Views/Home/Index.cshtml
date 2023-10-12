@@ -15,14 +15,14 @@
         </div>
         <div class="row">
             <div class="col-md-3">
-                <select class="form-select form-select-lg" aria-label=".form-select-sm example">
+                <select class="form-select form-select-lg">
                     <option selected>Finalidade</option>
                     <option value="1">Comprar</option>
                     <option value="2">Alugar</option>
                 </select>
             </div>
             <div class="col-md-3">
-                <select class="form-select form-select-lg col-md-3" aria-label=".form-select-sm example">
+                <select class="form-select form-select-lg col-md-3">
                     <option selected>Tipo</option>
                     @foreach (var tipo in Model.Tipos)
                     {
@@ -31,7 +31,7 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <select class="form-select form-select-lg col-md-3" aria-label=".form-select-sm example">
+                <select class="form-select form-select-lg col-md-3">
                     <option selected>Cidade</option>
                     @foreach (var cidade in Model.Cidades)
                     {
@@ -87,7 +87,7 @@
                             </button>
                         </div>
                     }
-                    <div class="card-body">
+                    <a class="card-body" asp-controller="Propriedade" asp-action="Propriedade" asp-route-id="@item.PropriedadeId" style="text-decoration:none; color: black">
                         <div class="row">
                             <small style="height: 1em;">@item.Codigo</small>
                         </div>
@@ -151,7 +151,7 @@
                         </div>
                         <div class="row">
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         }

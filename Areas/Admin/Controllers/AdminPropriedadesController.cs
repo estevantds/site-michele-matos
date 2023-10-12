@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MiMatos.Context;
 using MiMatos.Models;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 namespace MiMatos.Areas.Admin.Controllers
 {
