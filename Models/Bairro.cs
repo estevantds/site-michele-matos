@@ -19,7 +19,7 @@ namespace MiMatos.Models
         public Cidade Cidade { get; set; }
 
         [NotMapped]
-        public List<SelectListItem> Cidades { get; set; }
+        public List<Cidade> Cidades { get; set; }
 
         [NotMapped]
         [Display(Name = "Cidade")]

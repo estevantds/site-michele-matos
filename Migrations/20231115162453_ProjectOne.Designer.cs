@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MiMatos.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230803182526_AddIdentity")]
-    partial class AddIdentity
+    [Migration("20231115162453_ProjectOne")]
+    partial class ProjectOne
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -314,6 +314,9 @@ namespace MiMatos.Migrations
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
+                    b.Property<bool>("Visualizado")
+                        .HasColumnType("bit");
+
                     b.HasKey("ClienteId");
 
                     b.ToTable("Clientes");
@@ -330,23 +333,13 @@ namespace MiMatos.Migrations
                     b.Property<DateTime>("AtualizadoEm")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Bairro")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Cidade")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<DateTime>("CriadoEm")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Estado")
+                    b.Property<string>("Localidade")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Logradouro")
                         .IsRequired()
@@ -387,6 +380,34 @@ namespace MiMatos.Migrations
                     b.HasKey("EstadoId");
 
                     b.ToTable("Estados");
+                });
+
+            modelBuilder.Entity("MiMatos.Models.Imagem", b =>
+                {
+                    b.Property<int>("ImagemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImagemId"), 1L, 1);
+
+                    b.Property<string>("Caminho")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CriadoEm")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Destaque")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PropriedadeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ImagemId");
+
+                    b.HasIndex("PropriedadeId");
+
+                    b.ToTable("Imagens");
                 });
 
             modelBuilder.Entity("MiMatos.Models.Propriedade", b =>
@@ -485,10 +506,10 @@ namespace MiMatos.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("PrecoLocacao")
-                        .HasColumnType("decimal(12,2)");
+                        .HasColumnType("decimal(12,0)");
 
                     b.Property<decimal>("PrecoVenda")
-                        .HasColumnType("decimal(12,2)");
+                        .HasColumnType("decimal(12,0)");
 
                     b.Property<int>("ProprietarioId")
                         .HasColumnType("int");
@@ -594,6 +615,29 @@ namespace MiMatos.Migrations
                     b.ToTable("Proprietarios");
                 });
 
+            modelBuilder.Entity("MiMatos.Models.Tipo", b =>
+                {
+                    b.Property<int>("TipoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TipoId"), 1L, 1);
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Prefixo")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("nvarchar(2)");
+
+                    b.HasKey("TipoId");
+
+                    b.ToTable("Tipos");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -648,7 +692,7 @@ namespace MiMatos.Migrations
             modelBuilder.Entity("MiMatos.Models.Bairro", b =>
                 {
                     b.HasOne("MiMatos.Models.Cidade", "Cidade")
-                        .WithMany()
+                        .WithMany("Bairros")
                         .HasForeignKey("CidadeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -659,12 +703,23 @@ namespace MiMatos.Migrations
             modelBuilder.Entity("MiMatos.Models.Cidade", b =>
                 {
                     b.HasOne("MiMatos.Models.Estado", "Estado")
-                        .WithMany()
+                        .WithMany("Cidades")
                         .HasForeignKey("EstadoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Estado");
+                });
+
+            modelBuilder.Entity("MiMatos.Models.Imagem", b =>
+                {
+                    b.HasOne("MiMatos.Models.Propriedade", "Propriedade")
+                        .WithMany()
+                        .HasForeignKey("PropriedadeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Propriedade");
                 });
 
             modelBuilder.Entity("MiMatos.Models.Propriedade", b =>
@@ -676,6 +731,16 @@ namespace MiMatos.Migrations
                         .IsRequired();
 
                     b.Navigation("Proprietario");
+                });
+
+            modelBuilder.Entity("MiMatos.Models.Cidade", b =>
+                {
+                    b.Navigation("Bairros");
+                });
+
+            modelBuilder.Entity("MiMatos.Models.Estado", b =>
+                {
+                    b.Navigation("Cidades");
                 });
 
             modelBuilder.Entity("MiMatos.Models.Proprietario", b =>

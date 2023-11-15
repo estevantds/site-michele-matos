@@ -59,14 +59,13 @@ namespace MiMatos.Areas.Admin.Controllers
             cidades.OrderBy(c => c.Estado.Sigla);
 
             var model = new Bairro();
-            model.Cidades = new List<SelectListItem>();
+            model.Cidades = new List<Cidade>();
 
             if (cidades != null)
             {
-                model.Cidades.Add(new SelectListItem { Text = "", Value = "", Selected = true });
                 foreach (var item in cidades)
                 {
-                    model.Cidades.Add(new SelectListItem { Text = item.Nome, Value = item.Nome });
+                    model.Cidades.Add(item);
                 }
             }
 
@@ -121,15 +120,12 @@ namespace MiMatos.Areas.Admin.Controllers
             {
                 bairro.NomeCidade = cidade.Nome;
 
-                bairro.Cidades = new List<SelectListItem>();
+                bairro.Cidades = new List<Cidade>();
 
-                bairro.Cidades.Add(new SelectListItem { Text = cidade.Nome, Value = cidade.Nome });
+                // bairro.Cidades.Add(new SelectListItem { Text = cidade.Nome, Value = cidade.Nome });
                 foreach (var item in cidades)
                 {
-                    if (item.Nome != bairro.NomeCidade)
-                    {
-                        bairro.Cidades.Add(new SelectListItem { Text = item.Nome, Value = item.Nome });
-                    }
+                    bairro.Cidades.Add(item);
                 }
             }
             else
