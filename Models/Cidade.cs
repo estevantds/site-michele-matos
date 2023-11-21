@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MiMatos.Models
@@ -20,10 +19,10 @@ namespace MiMatos.Models
 
         public ICollection<Bairro> Bairros { get; set; }
 
+        public string NomeEstado { get; set; }
+
         [NotMapped]
         public List<SelectListItem> Estados { get; set; }
 
-        [NotMapped]
-        public string NomeEstado { get; set; }
     }
 }

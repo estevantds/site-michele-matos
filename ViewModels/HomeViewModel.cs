@@ -10,5 +10,6 @@ namespace MiMatos.ViewModels
         public List<Cidade> Cidades { get; set; }
         public List<Bairro> Bairros { get; set; }
         public List<Condominio> Condominios { get; set; }
+        public List<Localidade> Localidades { get; set; }
     }
 }

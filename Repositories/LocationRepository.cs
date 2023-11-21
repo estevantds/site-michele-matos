@@ -13,12 +13,6 @@ namespace MiMatos.Repositories
             _context = context;
         }
 
-        public IEnumerable<Estado> Estados => _context.Estados;
-
-        public IEnumerable<Cidade> Cidades => _context.Cidades;
-
-        public IEnumerable<Bairro> Bairros => _context.Bairros;
-
-        public IEnumerable<Condominio> Condominios => _context.Condominios;
+        public IEnumerable<Localidade> Localidades => _context.Localidades;
     }
 }

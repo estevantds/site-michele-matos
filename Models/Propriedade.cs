@@ -163,13 +163,13 @@ namespace MiMatos.Models
         public Proprietario Proprietario { get; set; }
 
         [NotMapped]
-        public List<SelectListItem> Proprietarios { get; set; }
+        public List<Proprietario> Proprietarios { get; set; }
 
         [NotMapped]
-        public List<SelectListItem> Tipos { get; set; }
+        public List<Tipo> Tipos { get; set; }
 
         [NotMapped]
-        public List<SelectListItem> Localidades { get; set; }
+        public List<string> Localidades { get; set; }
 
         [NotMapped]
         public List<string> CaminhosImagens { get; set; } = new List<string>();

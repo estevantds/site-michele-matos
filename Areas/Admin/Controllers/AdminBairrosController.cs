@@ -77,6 +77,7 @@ namespace MiMatos.Areas.Admin.Controllers
         public async Task<IActionResult> Create(Bairro bairro)
         {
             var cidade = _context.Cidades.FirstOrDefault(e => e.Nome == bairro.NomeCidade);
+
             bairro.Cidade = cidade;
             bairro.CidadeId = cidade.CidadeId;
 
@@ -96,8 +97,25 @@ namespace MiMatos.Areas.Admin.Controllers
                         return View(bairro);
                     }
                 }
-                _context.Add(bairro);
-                await _context.SaveChangesAsync();
+
+                var localidade = new Localidade();
+
+                localidade.Bairro = bairro.Nome;
+                localidade.Cidade = bairro.NomeCidade;
+                localidade.Estado = cidade.NomeEstado;
+
+                var localidadeSalva = SaveLocalidade(localidade);
+
+                if (localidadeSalva)
+                {
+                    _context.Add(bairro);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    ModelState.AddModelError("Ops!", "Erro ao Salvar a localidade.");
+                }
+
                 return RedirectToAction("Index", "AdminBairros");
             }
             return View();
@@ -201,6 +219,22 @@ namespace MiMatos.Areas.Admin.Controllers
         private bool BairroExists(int id)
         {
             return _context.Bairros.Any(e => e.BairroId == id);
+        }
+
+        private bool SaveLocalidade(Localidade localidade)
+        {
+            localidade.Nome = localidade.Bairro + ", " + localidade.Cidade + ", " + localidade.Estado;
+
+            try
+            {
+                _context.Add(localidade);
+                _context.SaveChanges();
+            }
+            catch 
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

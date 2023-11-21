@@ -32,6 +32,6 @@ namespace MiMatos.Models
         public DateTime AtualizadoEm { get; set; }
 
         [NotMapped]
-        public List<SelectListItem> Localidades { get; set; }
+        public List<Localidade> Localidades { get; set; }
     }
 }

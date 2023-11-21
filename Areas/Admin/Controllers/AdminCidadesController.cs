@@ -51,7 +51,10 @@ namespace MiMatos.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Cidade cidade)
         {
-            cidade.EstadoId = _context.Estados.FirstOrDefault(e => e.Nome == cidade.NomeEstado).EstadoId;
+            var estado = _context.Estados.FirstOrDefault(e => e.Nome == cidade.NomeEstado);
+            cidade.EstadoId = estado.EstadoId;
+            cidade.NomeEstado = estado.Nome;
+
             if (ModelState.IsValid)
             {
                 if (_context.Cidades.Any(c => c.Nome == cidade.Nome && c.Estado == cidade.Estado))
@@ -154,11 +157,15 @@ namespace MiMatos.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var cidade = await _context.Cidades.FindAsync(id);
+            var localidades = new List<Localidade>();
             if (cidade != null)
             {
+                localidades = _context.Localidades.Where(l => l.Cidade == cidade.Nome).ToList();
                 _context.Cidades.Remove(cidade);
             }
             await _context.SaveChangesAsync();
+
+            RemoveLocalidades(localidades);
 
             return RedirectToAction(nameof(Index));
         }
@@ -166,6 +173,12 @@ namespace MiMatos.Areas.Admin.Controllers
         private bool CidadeExists(int id)
         {
             return _context.Cidades.Any(e => e.CidadeId == id);
+        }
+
+        private void RemoveLocalidades(List<Localidade> localidades)
+        {
+            _context.RemoveRange(localidades);
+            _context.SaveChanges();
         }
     }
 }

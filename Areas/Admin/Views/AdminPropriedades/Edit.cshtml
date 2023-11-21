@@ -20,14 +20,16 @@
                     <input asp-for="Tipo" class="form-control" disabled/>
                 </div>
                 <div class="col-md-2">
-                    <label for="newType">Não encontrou?</label>
-                    <a id="newType" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Novo Tipo
-                    </a>
                 </div>
                 <div class="col-md-4">
-                    <label asp-for="@Model.Proprietario" class="control-label">Proprietário</label>
-                    <select asp-for="@Model.NomeProprietario" asp-items="Model.Proprietarios" class="form-select"></select>
+                    <label asp-for="NomeProprietario" class="control-label">Proprietário</label>
+                    <input asp-for="NomeProprietario" list="Proprietarios" id="Proprietarios" class="form-control" placeholder="Digite o Proprietário..." />
+                    <datalist id="Proprietarios">
+                        @foreach (var item in Model.Proprietarios)
+                        {
+                            <option value="@item.Nome" />
+                        }
+                    </datalist>
                 </div>
                 <div class="col-md-2">
                     <label for="newOwner">Não encontrou?</label>
@@ -161,24 +163,19 @@
                     <input asp-for="CEP" class="form-control" data-mask="00000-000" placeholder="_____-___" />
                     <span asp-validation-for="CEP" class="text-danger"></span>
                 </div>
-                <div class="form-group  col-md-1">
-                    <label asp-for="Estado" class="control-label"></label>
-                    <input asp-for="Estado" class="form-control" />
-                    <span asp-validation-for="Estado" class="text-danger"></span>
-                </div>
-                <div class="form-group  col-md-9">
-                    <label asp-for="Cidade" class="control-label"></label>
-                    <input asp-for="Cidade" class="form-control" />
-                    <span asp-validation-for="Cidade" class="text-danger"></span>
+                <div class="col-md-10">
+                    <label asp-for="Bairro" class="control-label"></label>
+                    <input asp-for="Bairro" list="Localidades" id="Localidades" class="form-control" placeholder="Digite a Localidade" />
+                    <datalist id="Localidades">
+                        @foreach (var item in Model.Localidades)
+                        {
+                            <option value="@item" />
+                        }
+                    </datalist>
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-md-3">
-                    <label asp-for="Bairro" class="control-label"></label>
-                    <input asp-for="Bairro" class="form-control" />
-                    <span asp-validation-for="Bairro" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-9">
                     <label asp-for="Logradouro" class="control-label"></label>
                     <input asp-for="Logradouro" class="form-control" />
                     <span asp-validation-for="Logradouro" class="text-danger"></span>

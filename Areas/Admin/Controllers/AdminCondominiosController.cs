@@ -24,25 +24,17 @@ namespace MiMatos.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            var bairros = _context.Bairros.OrderBy(b => b.Nome).ToList();
-            var cidades = _context.Cidades.ToList();
-            var estados = _context.Estados.ToList();
+            var todasLocalidades = _context.Localidades.ToList();
+            var localidadesApresentaveis = todasLocalidades.Where(tl => tl.Nome.Split(",").Length == 3).ToList();
 
             var condominio = new Condominio();
-            condominio.Localidades = new List<SelectListItem>();
+            condominio.Localidades = new List<Localidade>();
 
-            if (bairros != null)
+            if (localidadesApresentaveis != null)
             {
-                foreach (var item in bairros)
+                foreach (var item in localidadesApresentaveis)
                 {
-                    var cidade = cidades.FirstOrDefault(c => c.CidadeId == item.CidadeId);
-                    var estado = estados.FirstOrDefault(e => e.EstadoId == cidade.EstadoId);
-
-                    condominio.Localidades.Add(new SelectListItem 
-                    { 
-                        Text = item.Nome + ", " + cidade.Nome + ", " + estado.Nome,
-                        Value = item.Nome + ", " + cidade.Nome + ", " + estado.Nome
-                    });
+                    condominio.Localidades.Add(item);
                 }
             }
 
@@ -53,19 +45,31 @@ namespace MiMatos.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Condominio condominio)
         {
+            var localidade = _context.Localidades.FirstOrDefault(l => l.Nome == condominio.Localidade);
+
             condominio.CriadoEm = DateTime.Now;
             condominio.AtualizadoEm = DateTime.Now;
 
             if (ModelState.IsValid)
             {
-                if(_context.Condominios.Any(c => c.Nome == condominio.Nome))
+                if (_context.Condominios.Any(c => c.Nome == condominio.Nome) && localidade.Nome != null)
                 {
-                    ModelState.AddModelError("Inválido", "Já existe um condomínio com este nome.");
+                    ModelState.AddModelError("Inválido", "Já existe um condomínio com este nome nesta localidade.");
+
+                    var todasLocalidades = _context.Localidades.ToList();
+                    var localidadesApresentaveis = todasLocalidades.Where(tl => tl.Nome.Split(",").Length == 3).ToList();
+
+                    condominio.Localidades = localidadesApresentaveis;
+
                     return View(condominio);
                 }
 
                 _context.Condominios.Add(condominio);
                 _context.SaveChanges();
+
+                localidade.Nome = condominio.Nome + ", " + condominio.Localidade;
+
+                SaveLocalidade(localidade);
 
                 return RedirectToAction("Index");
             }
@@ -75,42 +79,28 @@ namespace MiMatos.Areas.Admin.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            var cidades = _context.Cidades.ToList();
-            var estados = _context.Estados.ToList();
-
             if (id == null)
             {
                 return NotFound();
             }
 
             var condominio = await _context.Condominios.FindAsync(id);
+            condominio.Localidades = new List<Localidade>();
+
             if (condominio == null)
             {
                 return NotFound();
             }
 
-            var bairros = _context.Bairros.ToList();
+            var todasLocalidades = _context.Localidades.ToList();
 
-            condominio.Localidades = new List<SelectListItem>();
+            var localidadesApresentaveis = todasLocalidades.Where(tl => tl.Nome.Split(",").Length == 3).ToList();
 
-            if (bairros != null)
+            if (localidadesApresentaveis != null)
             {
-                condominio.Localidades.Add(new SelectListItem { Text = condominio.Localidade, Value = condominio.Localidade, Selected = true });
-                foreach (var bairro in bairros)
+                foreach (var item in localidadesApresentaveis)
                 {
-                    var cidade = cidades.FirstOrDefault(c => c.CidadeId == bairro.CidadeId);
-                    var estado = estados.FirstOrDefault(e => e.EstadoId == cidade.EstadoId);
-
-                    var localidade = bairro.Nome + ", " + cidade.Nome + ", " + estado.Nome;
-
-                    if (localidade != condominio.Localidade)
-                    {
-                        condominio.Localidades.Add(new SelectListItem 
-                        { 
-                            Text = localidade, 
-                            Value = localidade
-                        });
-                    }
+                    condominio.Localidades.Add(item);
                 }
             }
 
@@ -171,17 +161,46 @@ namespace MiMatos.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var condominio = await _context.Condominios.FindAsync(id);
+            var localidadeParaExcluir = condominio.Nome + ", " + condominio.Localidade;
+
             if (condominio != null)
             {
                 _context.Condominios.Remove(condominio);
             }
             await _context.SaveChangesAsync();
+
+            DeleteLocalidade(localidadeParaExcluir);
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool CondominioExists(int id)
         {
             return _context.Condominios.Any(e => e.CondominioId == id);
+        }
+
+        private void SaveLocalidade(Localidade localidade)
+        {
+            try
+            {
+                localidade.LocalidadeId = 0;
+
+                _context.Add(localidade);
+                _context.SaveChanges();
+            }
+            catch
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private void DeleteLocalidade(string localidade)
+        {
+            var localidadeParaExcluir = _context.Localidades.First(l => l.Nome == localidade);
+
+            _context.Remove(localidadeParaExcluir);
+
+            _context.SaveChanges();
         }
     }
 }

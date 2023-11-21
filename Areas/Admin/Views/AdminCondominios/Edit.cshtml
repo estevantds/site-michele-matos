@@ -31,7 +31,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="Localidade" class="control-label"></label>
-                <select asp-for="Localidade" asp-items="Model.Localidades" class="form-select"></select>
+                <input asp-for="Localidade" list="Localidades" class="form-control" />
+                <datalist id="Localidades">
+                    @foreach (var item in Model.Localidades)
+                    {
+                        <option value="@item.Nome" />
+                    }
+                </datalist>
                 <span asp-validation-for="Localidade" class="text-danger"></span>
             </div>
             <br />

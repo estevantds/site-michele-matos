@@ -23,10 +23,7 @@ namespace MiMatos.Controllers
 
             homeVM.Propriedades = _propriedadeRepository.PropriedadesDisponiveisRecemAdicionadas().ToList();
             homeVM.Tipos = _tipoRepository.Tipos.ToList();
-            homeVM.Estados = _locationRepository.Estados.ToList();
-            homeVM.Cidades = _locationRepository.Cidades.ToList();
-            homeVM.Bairros = _locationRepository.Bairros.ToList();
-            homeVM.Condominios = _locationRepository.Condominios.ToList();
+            homeVM.Localidades = _locationRepository.Localidades.ToList();
 
             return View(homeVM);
         }

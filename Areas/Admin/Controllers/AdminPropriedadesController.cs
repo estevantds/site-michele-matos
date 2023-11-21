@@ -85,50 +85,39 @@ namespace MiMatos.Areas.Admin.Controllers
             var estados = _context.Estados.ToList();
 
             var model = new Propriedade();
-            model.Tipos = new List<SelectListItem>();
-            model.Proprietarios = new List<SelectListItem>();
-            model.Localidades = new List<SelectListItem>();
+            model.Tipos = new List<Tipo>();
+            model.Proprietarios = new List<Proprietario>();
+            model.Localidades = new List<string>();
 
             if (proprietarios != null)
             {
-                model.Proprietarios.Add(new SelectListItem { Text = "", Value = "", Selected = true });
                 foreach (var item in proprietarios)
                 {
-                    model.Proprietarios.Add(new SelectListItem { Text = item.Nome, Value = item.Nome });
+                    model.Proprietarios.Add(item);
                 }
             }
 
             if (tipos != null)
             {
-                model.Tipos.Add(new SelectListItem { Text = "", Value = "", Selected = true });
                 foreach (var item in tipos)
                 {
-                    model.Tipos.Add(new SelectListItem { Text = item.Nome, Value = item.Nome });
+                    model.Tipos.Add(item);
                 }
             }
 
             if (bairros != null)
             {
-                model.Localidades.Add(new SelectListItem { Text = "", Value = "", Selected = true });
                 foreach (var item in bairros)
                 {
                     var cidade = cidades.FirstOrDefault(c => c.CidadeId == item.CidadeId);
                     var estado = estados.FirstOrDefault(e => e.EstadoId == cidade.EstadoId);
 
-                    model.Localidades.Add(new SelectListItem
-                    {
-                        Text = item.Nome + ", " + cidade.Nome + ", " + estado.Nome,
-                        Value = item.Nome + ", " + cidade.Nome + ", " + estado.Nome
-                    });
+                    model.Localidades.Add(item.Nome + ", " + cidade.Nome + ", " + estado.Nome);
                 }
 
                 foreach (var item in condominios)
                 {
-                    model.Localidades.Add(new SelectListItem
-                    {
-                        Text = item.Nome + ", " + item.Localidade,
-                        Value = item.Nome + ", " + item.Localidade
-                    });
+                    model.Localidades.Add(item.Nome + ", " + item.Localidade);
                 }
             }
 
@@ -192,17 +181,13 @@ namespace MiMatos.Areas.Admin.Controllers
 
             var proprietarios = _context.Proprietarios.ToList();
 
-            propriedade.Proprietarios = new List<SelectListItem>();
+            propriedade.Proprietarios = new List<Proprietario>();
 
             if (proprietarios != null)
             {
-                propriedade.Proprietarios.Add(new SelectListItem { Text = propriedade.NomeProprietario, Value = propriedade.NomeProprietario, Selected = true });
                 foreach (var item in proprietarios)
                 {
-                    if (item.Nome != propriedade.NomeProprietario)
-                    {
-                        propriedade.Proprietarios.Add(new SelectListItem { Text = item.Nome, Value = item.Nome });
-                    }
+                    propriedade.Proprietarios.Add(item);
                 }
             }
 

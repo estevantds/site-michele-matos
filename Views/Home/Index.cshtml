@@ -14,15 +14,15 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3">
-                <select class="form-select form-select-lg">
+            <div class="col-md-4">
+                <select class="form-select form-select">
                     <option selected>Finalidade</option>
                     <option value="1">Comprar</option>
                     <option value="2">Alugar</option>
                 </select>
             </div>
-            <div class="col-md-3">
-                <select class="form-select form-select-lg col-md-3">
+            <div class="col-md-4">
+                <select class="form-select form-select col-md-3">
                     <option selected>Tipo</option>
                     @foreach (var tipo in Model.Tipos)
                     {
@@ -30,17 +30,17 @@
                     }
                 </select>
             </div>
-            <div class="col-md-3">
-                <select class="form-select form-select-lg col-md-3">
-                    <option selected>Cidade</option>
-                    @foreach (var cidade in Model.Cidades)
+            <div class="col-md-4">
+                <input class="form-control" list="Localidades" placeholder="Onde?"/>
+                <datalist id="Localidades" col-md-3">
+                    @foreach (var item in Model.Localidades)
                     {
-                        <option value="@cidade.Nome">@cidade.Nome</option>
+                        <option value="@item.Nome" />
                     }
-                </select>
+                </datalist>
             </div>
-            <div class="d-grid gap-2 col-md-3">
-                <input type="submit" value="Buscar" class="btn btn-outline-dark" />
+            <div class="d-grid">
+                <input type="submit" value="Buscar" class="btn btn-dark" />
             </div>
         </div>
     </div>
