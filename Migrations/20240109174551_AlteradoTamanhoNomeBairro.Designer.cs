@@ -4,6 +4,7 @@ using MiMatos.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MiMatos.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240109174551_AlteradoTamanhoNomeBairro")]
+    partial class AlteradoTamanhoNomeBairro
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -285,8 +287,8 @@ namespace MiMatos.Migrations
 
                     b.Property<string>("Celular")
                         .IsRequired()
-                        .HasMaxLength(14)
-                        .HasColumnType("nvarchar(14)");
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<DateTime>("CriadoEm")
                         .HasColumnType("datetime2");
@@ -312,8 +314,8 @@ namespace MiMatos.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("OutroTelefone")
-                        .HasMaxLength(14)
-                        .HasColumnType("nvarchar(14)");
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<bool>("Visualizado")
                         .HasColumnType("bit");
@@ -425,9 +427,6 @@ namespace MiMatos.Migrations
                     b.Property<string>("Cidade")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("EmCondominio")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Estado")
                         .HasColumnType("nvarchar(max)");
 
@@ -458,8 +457,8 @@ namespace MiMatos.Migrations
 
                     b.Property<string>("Bairro")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CEP")
                         .HasMaxLength(8)
@@ -513,9 +512,6 @@ namespace MiMatos.Migrations
 
                     b.Property<bool>("Locado")
                         .HasColumnType("bit");
-
-                    b.Property<int>("LocalidadeId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Logradouro")
                         .IsRequired()

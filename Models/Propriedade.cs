@@ -47,12 +47,12 @@ namespace MiMatos.Models
 
         [DisplayName("Preço para Locação")]
         [Column(TypeName = "decimal(12,0)")]
-        [Range(0, 999999999)]
+        [Range(0.00, 999999999)]
         public decimal PrecoLocacao { get; set; }
 
         [DisplayName("Preço para Venda")]
         [Column(TypeName = "decimal(12,0)")]
-        [Range(0,999999999)]
+        [Range(0.00,999999999)]
         public decimal PrecoVenda { get; set; }
 
         [DisplayName("Área Total")]
@@ -100,7 +100,7 @@ namespace MiMatos.Models
 
         [DisplayName("Bairro")]
         [Required(ErrorMessage = "Campo Obrigatório.")]
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string Bairro { get; set; }
 
         [DisplayName("Em Condomínio")]
@@ -161,6 +161,8 @@ namespace MiMatos.Models
 
         public int ProprietarioId { get; set; }
         public Proprietario Proprietario { get; set; }
+
+        public int LocalidadeId { get; set; }
 
         [NotMapped]
         public List<Proprietario> Proprietarios { get; set; }

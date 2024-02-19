@@ -38,10 +38,13 @@
                 </td>
                 <td>
                     <div class="row">
-                        <a class="btn btn-warning col" asp-action="Edit" asp-route-id="@item.BairroId">Edit</a>
-                        <a class="btn btn-danger col" asp-action="Delete" asp-route-id="@item.BairroId">Delete</a>
+                        <a class="btn btn-outline-dark col" asp-action="Edit" asp-route-id="@item.BairroId">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <a class="btn btn-outline-danger col" asp-action="Delete" asp-route-id="@item.BairroId">
+                            <i class="bi bi-trash"></i> Apagar
+                        </a>
                     </div>
-                    
                 </td>
             </tr>
         }

@@ -14,14 +14,14 @@ namespace MiMatos.Models
 
         [Display(Name = "Celular")]
         [Required(ErrorMessage = "Campo Obrigatório")]
-        [MaxLength(11)]
+        [MaxLength(14)]
         public string Celular { get; set; }
 
         [Display(Name = "É WhatsApp?")]
         public bool IsWhatsApp { get; set; }
 
         [Display(Name = "Outro Telefone")]
-        [MaxLength(11)]
+        [MaxLength(14)]
         public string OutroTelefone { get; set; }
 
         [Display(Name = "E-mail")]

@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MiMatos.Context;
 using MiMatos.Models;
+using MiMatos.ViewModels;
+using ReflectionIT.Mvc.Paging;
 
 namespace MiMatos.Areas.Admin.Controllers
 {
@@ -18,43 +19,155 @@ namespace MiMatos.Areas.Admin.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string filter, int pageindex = 1, string sort = "CriadoEm")
         {
-            var propriedades = _context.Propriedades.ToList();
+            var imoveisVM = new ImoveisViewModel();
+            var resultado = _context.Propriedades.AsNoTracking().AsQueryable();
             var imagens = _context.Imagens.ToList();
             var tipos = _context.Tipos.ToList();
+            var localidades = _context.Localidades.ToList();
 
-            foreach (var item in propriedades)
+            foreach (var item in resultado)
             {
                 var itemImagens = imagens.Where(i => i.PropriedadeId == item.PropriedadeId);
                 if (itemImagens.Count() > 0)
                 {
                     if (itemImagens.Any(i => i.Destaque))
-                    {
                         item.CaminhoImagem = itemImagens.FirstOrDefault(i => i.Destaque).Caminho;
-                    }
                     else
-                    {
                         item.CaminhoImagem = itemImagens.FirstOrDefault().Caminho;
-                    }
                 }
             }
-            return View(propriedades);
+
+            if (!string.IsNullOrWhiteSpace(filter))
+                resultado = resultado.Where(p => p.Bairro.Contains(filter));
+
+            imoveisVM.Propriedades = await PagingList.CreateAsync(resultado, 5, pageindex, sort, "Titulo");
+
+            imoveisVM.Propriedades.RouteValue = new RouteValueDictionary
+            {
+                { "filter", filter }
+            };
+
+            imoveisVM.Tipos = tipos;
+            imoveisVM.Localidades = localidades;
+
+            return View(imoveisVM);
         }
 
-        public IActionResult ListByCondominio(int? id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(ImoveisViewModel imoveisVM, int pageindex = 1, string sort = "CriadoEm")
+        {
+            var resultado = _context.Propriedades.AsNoTracking().AsQueryable();
+            var tipos = _context.Tipos.ToList();
+            var localidades = _context.Localidades.ToList();
+            var localidadeId = 0;
+
+            if (!string.IsNullOrEmpty(imoveisVM.Localidade))
+            {
+                localidadeId = _context.Localidades.FirstOrDefault(i => i.Nome == imoveisVM.Localidade).LocalidadeId;
+
+                if (imoveisVM.EmCondominio)
+                    resultado = resultado.Where(i => i.LocalidadeId == localidadeId && i.EmCondominio);
+                else
+                    resultado = resultado.Where(i => i.LocalidadeId == localidadeId);
+
+                if (resultado.Count() <= 0)
+                    imoveisVM.TituloBusca = "Nenhum imóvel corresponde à busca.";
+            }
+
+            if (imoveisVM.Finalidade == "Venda")
+                resultado = resultado.Where(i => i.ParaVenda && !i.ParaLocacao && i.PrecoVenda >= imoveisVM.MinValue && i.PrecoVenda <= imoveisVM.MaxValue);
+            else if (imoveisVM.Finalidade == "Locação")
+                resultado = resultado.Where(i => i.ParaLocacao && !i.ParaVenda && i.PrecoLocacao >= imoveisVM.MinValueLoc && i.PrecoLocacao <= imoveisVM.MaxValueLoc);
+            else
+                resultado = resultado.Where(i => i.ParaVenda && i.PrecoVenda >= imoveisVM.MinValue && i.PrecoVenda <= imoveisVM.MaxValue || 
+                                                 i.ParaLocacao && i.PrecoLocacao >= imoveisVM.MinValueLoc && i.PrecoLocacao <= imoveisVM.MaxValueLoc);
+
+            if (imoveisVM.Tipo == "Todos")
+            {
+                if (localidadeId != 0)
+                    imoveisVM.TituloBusca = "Resultado de qualquer imóvel para " + imoveisVM.Finalidade + " em " + imoveisVM.Localidade;
+                else
+                    imoveisVM.TituloBusca = "Resultado de qualquer imóvel para " + imoveisVM.Finalidade + " em todas as localidades";
+            }
+            else
+            {
+                resultado = resultado.Where(i => i.Tipo == imoveisVM.Tipo);
+
+                if (localidadeId != 0 && string.IsNullOrEmpty(imoveisVM.TituloBusca))
+                    imoveisVM.TituloBusca = "Resultado de " + imoveisVM.Tipo + " para " + imoveisVM.Finalidade + " em " + imoveisVM.Localidade;
+                else if (string.IsNullOrEmpty(imoveisVM.TituloBusca))
+                    imoveisVM.TituloBusca = "Resultado de " + imoveisVM.Tipo + " para " + imoveisVM.Finalidade + " em todas as localidades";
+            }
+
+            if (imoveisVM.Finalidade == "Venda" || imoveisVM.Finalidade == "Venda ou Locação")
+                resultado = resultado.Where(i => i.PrecoVenda >= imoveisVM.MinValue && i.PrecoVenda <= imoveisVM.MaxValue);
+
+            if(imoveisVM.Finalidade == "Locação" || imoveisVM.Finalidade == "Venda ou Locação")
+                resultado = resultado.Where(i => i.PrecoLocacao >= imoveisVM.MinValueLoc && i.PrecoLocacao <= imoveisVM.MaxValueLoc);
+
+            if(imoveisVM.QtdeQuartos != "Indiferente")
+            {
+                if (imoveisVM.QtdeQuartos != "4+")
+                    resultado = resultado.Where(i => i.QtdeQuartos == Int32.Parse(imoveisVM.QtdeQuartos));
+                else
+                    resultado = resultado.Where(i => i.QtdeQuartos >= 4);
+            }
+
+            if (imoveisVM.ComSuite)
+                resultado = resultado.Where(i => i.QtdeSuites > 0);
+
+            if (imoveisVM.TemQuintal)
+                resultado = resultado.Where(i => i.TemQuintal);
+
+            if (imoveisVM.TemPiscina)
+                resultado = resultado.Where(i => i.TemPiscina);
+
+            if (imoveisVM.TemQuadra)
+                resultado = resultado.Where(i => i.TemQuadra);
+
+            if (imoveisVM.TemSalao)
+                resultado = resultado.Where(i => i.TemSalaoFesta);
+
+            if (imoveisVM.TemAreaGourmet)
+                resultado = resultado.Where(i => i.TemAreaGourmet);
+
+            if (imoveisVM.TemChurrasqueira)
+                resultado = resultado.Where(i => i.TemChurrasqueira);
+
+            if (resultado.Count() == 0)
+                imoveisVM.TituloBusca = "Nenhum imóvel encontrado. Revise os filtros.";
+
+            imoveisVM.Tipos = tipos;
+            imoveisVM.Localidades = localidades;
+
+            imoveisVM.Propriedades = await PagingList.CreateAsync(resultado, 5, pageindex, sort, "Titulo");
+
+            return View(imoveisVM);
+        }
+
+        public async Task<IActionResult> ListByCondominio(int? id, string filter, int pageindex = 1, string sort = "CriadoEm")
         {
             if (id == null)
-            {
                 return NotFound();
-            }
-            var condominio = _context.Condominios.FirstOrDefault(c => c.CondominioId == id).Nome;
-            var propriedades = _context.Propriedades.Where(p => p.Condominio == condominio);
 
-            if (propriedades.Count() == 0)
-            {
+            var condominio = _context.Condominios.FirstOrDefault(c => c.CondominioId == id).Nome;
+            var resultado = _context.Propriedades.AsNoTracking().AsQueryable().Where(p => p.Condominio == condominio);
+
+            if (resultado.Count() == 0)
                 return RedirectToRoute(new { action = "NenhumImovelCondominio", controller = "AdminPropriedades", id });
-            }
+
+            if (!string.IsNullOrWhiteSpace(filter))
+                resultado = resultado.Where(p => p.Bairro.Contains(filter));
+
+            var propriedades = await PagingList.CreateAsync(resultado, 5, pageindex, sort, "Nome");
+
+            propriedades.RouteValue = new RouteValueDictionary
+            {
+                { "filter", filter }
+            };
 
             return View(propriedades);
         }
@@ -167,6 +280,11 @@ namespace MiMatos.Areas.Admin.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
+            var condominios = _context.Condominios.ToList();
+            var bairros = _context.Bairros.ToList().OrderBy(b => b.Cidade.Nome);
+            var cidades = _context.Cidades.ToList();
+            var estados = _context.Estados.ToList();
+
             if (id == null)
             {
                 return NotFound();
@@ -182,6 +300,20 @@ namespace MiMatos.Areas.Admin.Controllers
             var proprietarios = _context.Proprietarios.ToList();
 
             propriedade.Proprietarios = new List<Proprietario>();
+
+            propriedade.Localidades = new List<string>();
+
+            foreach (var item in bairros)
+            {
+                var cidade = cidades.FirstOrDefault(c => c.CidadeId == item.CidadeId);
+                var estado = estados.FirstOrDefault(e => e.EstadoId == cidade.EstadoId);
+
+                propriedade.Localidades.Add(item.Nome + ", " + cidade.Nome + ", " + estado.Nome);
+            }
+            foreach (var item in condominios)
+            {
+                propriedade.Localidades.Add(item.Nome + ", " + item.Localidade);
+            }
 
             if (proprietarios != null)
             {

@@ -26,7 +26,7 @@
                         <i class="bi bi-whatsapp"></i>
                     }
                 </li>
-                <li class="list-group-item"><b>Outro Telefone</b> @item.OutroTelefone</li>
+                <li class="list-group-item"><b>Outro Telefone:</b> @item.OutroTelefone</li>
                 <li class="list-group-item"><b>e-mail:</b> @item.Email</li>
                 <li class="list-group-item"><b>Nascimento:</b> @item.Nascimento</li>
                 <li class="list-group-item"><b>Data de Cadastro:</b> @item.CriadoEm</li>
@@ -45,8 +45,12 @@
             <hr />
             <div class="d-flex">
                 <div class="col-md-12 text-end">
-                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ClienteId">Editar</a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ClienteId">Deletar</a>
+                    <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@item.ClienteId">
+                        <i class="bi bi-pencil"></i> Editar
+                    </a>
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.ClienteId">
+                        <i class="bi bi-trash"></i> Apagar
+                    </a>
                 </div>
             </div>
         </div>

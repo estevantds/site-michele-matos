@@ -33,8 +33,12 @@
                 </td>
                 <td>
                     <div class="row">
-                        <a class="btn btn-warning col" asp-action="Edit" asp-route-id="@item.EstadoId">Editar</a>
-                        <a class="btn btn-danger col" asp-action="Delete" asp-route-id="@item.EstadoId">Deletar</a>
+                        <a class="btn btn-outline-dark col" asp-action="Edit" asp-route-id="@item.EstadoId">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <a class="btn btn-outline-danger col" asp-action="Delete" asp-route-id="@item.EstadoId">
+                            <i class="bi bi-trash"></i> Apagar
+                        </a>
                     </div>
                     
                 </td>

@@ -7,7 +7,7 @@
 <h1>Lista de Tipos</h1>
 
 <p>
-    <a class="btn btn-outline-primary" asp-action="Create">Criar Novo</a>
+    <a class="btn btn-dark" asp-action="Create">+ Criar Novo</a>
 </p>
 <table class="table">
     <thead>
@@ -31,8 +31,12 @@
                 @Html.DisplayFor(modelItem => item.Prefixo)
             </td>
             <td>
-                <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.TipoId">Editar</a>
-                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.TipoId">Deletar</a>
+                <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@item.TipoId">
+                        <i class="bi bi-pencil"></i> Editar
+                </a>
+                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.TipoId">
+                        <i class="bi bi-trash"></i> Apagar
+                </a>
             </td>
         </tr>
 }

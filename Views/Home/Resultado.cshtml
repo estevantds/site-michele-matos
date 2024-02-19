@@ -1,64 +1,8 @@
-﻿@model MiMatos.ViewModels.HomeViewModel
-
-@{
-    ViewData["Title"] = "Home page";
-}
+﻿@model IEnumerable<MiMatos.Models.Propriedade>
 
 <div class="container">
-    <br>
-    <br>
-    <form asp-action="Index">
-        <div class="row justify-content-center">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <h2>Vamos encontrar o imóvel dos seus sonhos?</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <select class="form-select form-select" asp-for="Finalidade">
-                        <option value="Finalidade" selected>Finalidade</option>
-                        <option value="Comprar">Comprar</option>
-                        <option value="Alugar">Alugar</option>
-                        <option value="Comprar ou Alugar">Comprar ou Alugar</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <select class="form-select form-select col-md-3" asp-for="Tipo">
-                        <option selected>Tipo</option>
-                        @foreach (var tipo in Model.Tipos)
-                        {
-                            <option value="@tipo.Nome">@tipo.Nome</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <input class="form-control" list="Localidades" placeholder="Onde?" asp-for="Localidade" />
-                    <datalist id="Localidades" col-md-3">
-                        @foreach (var item in Model.Localidades)
-                        {
-                            <option value="@item.Nome" />
-                        }
-                    </datalist>
-                </div>
-                <div class="d-grid">
-                    <input type="submit" value="Buscar" class="btn btn-dark" />
-                </div>
-            </div>
-        </div>
-    </form>
-    <br />
-    <br />
-    <hr />
-    <br />
-    <br />
-    <div class="row">
-        <h2>Últimos Imóveis Adicionados</h2>
-    </div>
-    <br />
-    <br />
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        @foreach (var item in Model.Propriedades)
+        @foreach (var item in Model)
         {
             <div class="col">
                 <div class="card shadow-lg" style="width: 25rem;">

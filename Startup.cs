@@ -4,6 +4,7 @@ using MiMatos.Context;
 using MiMatos.Repositories;
 using MiMatos.Repositories.Interfaces;
 using MiMatos.Services;
+using ReflectionIT.Mvc.Paging;
 
 namespace MiMatos;
 
@@ -39,6 +40,12 @@ public class Startup
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         services.AddControllersWithViews();
+
+        services.AddPaging(options =>
+        {
+            options.ViewName = "Bootstrap4";
+            options.PageParameterName = "pageindex";
+        });
 
         services.AddMemoryCache();
         services.AddSession();

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MiMatos.Models.Proprietario>
+﻿@model ReflectionIT.Mvc.Paging.PagingList<MiMatos.Models.Proprietario>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,6 +9,23 @@
 <p>
     <a class="btn btn-dark" asp-action="Create">+ Novo Proprietário</a>
 </p>
+<hr/>
+
+<form method="get" class="form-inline">
+    <div class="row">
+        <div class=" col-md-6">
+            <input name="filter" class="form-control" placeholder="Buscar" value="@Model.RouteValue["Filter"]" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-dark">
+                Buscar
+            </button>
+        </div>
+    </div>
+</form>
+
 <div class="Container">
     @foreach (var item in Model)
     {
@@ -34,12 +51,21 @@
                 <hr />
                 <div class="d-flex">
                     <div class="col-md-12 text-end">
-                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ProprietarioId">Editar</a>
-                        <a class="btn btn-info" asp-controller="AdminPropriedades" asp-action="ListByProprietario" asp-route-id="@item.ProprietarioId">Ver Imóveis</a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ProprietarioId">Apagar</a>
+                        <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@item.ProprietarioId">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <a class="btn btn-dark" asp-controller="AdminPropriedades" asp-action="ListByProprietario" asp-route-id="@item.ProprietarioId">
+                            <i class="bi bi-eye"></i> Ver Imóveis
+                        </a>
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.ProprietarioId">
+                            <i class="bi bi-trash"></i> Apagar
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     }
+    <div>
+        <vc:pager paging-list="@Model"></vc:pager>
+    </div>
 </div>

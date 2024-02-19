@@ -10,5 +10,6 @@ namespace MiMatos.Models
         public string Bairro { get; set; }
         public string Cidade { get; set; }
         public string Estado { get; set; }
+        public bool EmCondominio { get; set; }
     }
 }

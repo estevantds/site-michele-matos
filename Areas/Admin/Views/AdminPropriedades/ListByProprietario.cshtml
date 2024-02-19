@@ -109,20 +109,32 @@ else
                             </div>
                         </div>
                         <hr />
-                        <div class="d-flex">
-                            <h5 class="col-md-6">Proprietário: @item.NomeProprietario</h5>
-                            <div class="col-md-6 text-end">
+                        <div>
+                            <div class="row">
+                                <h5 class="col-md-6">Proprietário: @item.NomeProprietario</h5>
+                            </div>
+                            <div class="row text-end">
                                 @if (item.CaminhoImagem != "")
                                 {
-                                    <a class="btn btn-outline-dark" asp-action="Index" asp-controller="AdminImagens" asp-route-id="@item.PropriedadeId" aria-disabled="true">Gerenciar Imagens</a>
+                                    <a class="btn btn-primary col" asp-action="Index" asp-controller="AdminImagens" asp-route-id="@item.PropriedadeId" aria-disabled="true">
+                                        <i class="bi bi-list"></i> Gerenciar Imagens
+                                    </a>
                                 }
                                 else
                                 {
-                                    <a class="btn btn-outline-dark" asp-action="Upload" asp-controller="AdminImagens" asp-route-id="@item.PropriedadeId">Carregar Imagens</a>
+                                    <a class="btn btn-primary col" asp-action="Upload" asp-controller="AdminImagens" asp-route-id="@item.PropriedadeId">
+                                        <i class="bi bi-upload"></i> Carregar Imagens
+                                    </a>
                                 }
-                                <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.PropriedadeId">Detalhes</a>
-                                <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.PropriedadeId">Editar</a>
-                                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.PropriedadeId">Remover</a>
+                                <a class="btn btn-outline-dark col" asp-action="Edit" asp-route-id="@item.PropriedadeId">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                <a class="btn btn-dark col" asp-action="Details" asp-route-id="@item.PropriedadeId">
+                                    <i class="bi bi-eye"></i> Ver Detalhes
+                                </a>
+                                <a class="btn btn-outline-danger col" asp-action="Delete" asp-route-id="@item.PropriedadeId">
+                                    <i class="bi bi-trash"></i> Apagar
+                                </a>
                             </div>
                         </div>
                     </div>

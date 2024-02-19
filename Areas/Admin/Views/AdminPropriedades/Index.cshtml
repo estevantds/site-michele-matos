@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MiMatos.Models.Propriedade>
+﻿@model MiMatos.ViewModels.ImoveisViewModel
 
 @{
     ViewData["Title"] = "Imóveis - Gerenciar";
@@ -9,14 +9,367 @@
 <p>
     <a class="btn btn-dark" asp-action="Create">+ Novo Imóvel</a>
 </p>
+<hr />
 
-@if (Model.AsEnumerable().Count().Equals(0))
+@if (Model.Propriedades.Count().Equals(0) && string.IsNullOrEmpty(Model.TituloBusca))
 {
     <span>Nenhum Imóvel foi cadastrado.</span>
 }
+else if (Model.Propriedades.Count().Equals(0) && !string.IsNullOrEmpty(Model.TituloBusca))
+{
+    <h3>@Model.TituloBusca</h3>
+    <div class="dropdown w-100">
+        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Filtros
+        </button>
+        <ul class="dropdown-menu w-100" aria-labelledby="dropdownButton">
+            <li>
+                <form class="dropdown-item" asp-action="Index">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label asp-for="Finalidade" class="control-label"></label>
+                            <select class="form-select" asp-for="Finalidade">
+                                <option value="Venda" selected>Venda</option>
+                                <option value="Locação">Locação</option>
+                                <option value="Venda ou Locação">Venda ou Locação</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Tipo" class="control-label"></label>
+                            <select class="form-select" asp-for="Tipo">
+                                <option value="Todos" selected>Todos</option>
+                                @foreach (var tipo in Model.Tipos)
+                                {
+                                    <option value="@tipo.Nome">@tipo.Nome</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Localidade" class="control-label"></label>
+                            <input class="form-control" list="Localidades" placeholder="Onde?" asp-for="Localidade" />
+                            <datalist id="Localidades" col-md-3">
+                                @foreach (var item in Model.Localidades)
+                                {
+                                    <option value="@item.Nome" />
+                                }
+                            </datalist>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6"></div>
+                        <label class="form-check-label col-md-6">
+                            <input class="form-check-input" asp-for="EmCondominio" /> @Html.DisplayNameFor(model => model.EmCondominio)
+                        </label>
+                    </div>
+                    <hr />
+                    <div class="row justify-content-around">
+                        <div class="col-md-3">
+                            <h5>Valor de Venda</h5>
+                            <div class="row">
+                                <label for="MinValue" class="form-label">Valor Mínimo</label>
+                                <input id="MinValue" type="range" class="form-range" value="0" min="0" max="10000000" step="10000" oninput="DisplayMin.value=value" onchange="DisplayMin.value=value" />
+                                <input asp-for="MinValue" class="form-control" type="number" id="DisplayMin" step="10000" value="0" oninput="MinValue.value=value" onchange="MinValue.value=value" />
+                            </div>
+                            <div class="row">
+                                <label for="MaxValue" class="form-label">Valor Máximo</label>
+                                <input id="MaxValue" type="range" class="form-range" value="10000000" min="0" max="10000000" step="10000" oninput="DisplayMax.value=value" onchange="DisplayMax.value=value" />
+                                <input asp-for="MaxValue" class="form-control " type="number" id="DisplayMax" step="10000" value="10000000" oninput="MaxValue.value=value" onchange="MaxValue.value=value" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-3">
+                            <h5>Valor de Locação</h5>
+                            <div class="row">
+                                <label for="MinValueLoc" class="form-label">Valor Mínimo</label>
+                                <input id="MinValueLoc" type="range" class="form-range" value="0" min="0" max="100000" step="500" oninput="DisplayMinLoc.value=value" onchange="DisplayMinLoc.value=value" />
+                                <input asp-for="MinValueLoc" class="form-control" type="number" id="DisplayMinLoc" step="10000" value="0" oninput="MinValueLoc.value=value" onchange="MinValueLoc.value=value" />
+                            </div>
+                            <div class="row">
+                                <label for="valorMax" class="form-label">Valor Máximo</label>
+                                <input id="MaxValueLoc" type="range" class="form-range" value="100000" min="0" max="100000" step="500" oninput="DisplayMaxLoc.value=value" onchange="DisplayMaxLoc.value=value" />
+                                <input asp-for="MaxValueLoc" class="form-control " type="number" id="DisplayMaxLoc" step="500" value="100000" oninput="MaxValueLoc.value=value" onchange="MaxValueLoc.value=value" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>Mais Opções</h5>
+                            <div class="row">
+                                <label asp-for="QtdeQuartos" class="control-label">Número de Quartos</label>
+                                <select class="form-select w-100" asp-for="QtdeQuartos">
+                                    <option value="Indiferente" selected>Indiferente</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4+">4+</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="ComSuite" /> @Html.DisplayNameFor(model => model.ComSuite)
+                                </label>
+                            </div>
+                            <hr />
+                            <div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="TemQuintal" /> @Html.DisplayNameFor(model => model.TemQuintal)
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="TemPiscina" /> @Html.DisplayNameFor(model => model.TemPiscina)
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="TemQuadra" /> @Html.DisplayNameFor(model => model.TemQuadra)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="TemSalao" /> @Html.DisplayNameFor(model => model.TemSalao)
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="TemAreaGourmet" /> @Html.DisplayNameFor(model => model.TemAreaGourmet)
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="TemChurrasqueira" /> @Html.DisplayNameFor(model => model.TemChurrasqueira)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="d-grid">
+                            <input type="submit" value="Buscar" class="btn btn-dark" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <a class="btn btn-outline-dark" asp-action="Index">Limpar Busca</a>
+                        </div>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <div>
+            <a class="btn btn-outline-dark" asp-action="Index">Retornar</a>
+        </div>
+    </div>
+}
 else
 {
-    foreach (var item in Model)
+    if (!string.IsNullOrEmpty(Model.TituloBusca))
+    {
+        <h3>@Model.TituloBusca</h3>
+    }
+    <div class="dropdown w-100">
+        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Filtros
+        </button>
+        <ul class="dropdown-menu w-100" aria-labelledby="dropdownButton">
+            <li>
+                <form class="dropdown-item" asp-action="Index">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label asp-for="Finalidade" class="control-label"></label>
+                            <select class="form-select" asp-for="Finalidade">
+                                <option value="Venda" selected>Venda</option>
+                                <option value="Locação">Locação</option>
+                                <option value="Venda ou Locação">Venda ou Locação</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Tipo" class="control-label"></label>
+                            <select class="form-select" asp-for="Tipo">
+                                <option value="Todos" selected>Todos</option>
+                                @foreach (var tipo in Model.Tipos)
+                                {
+                                    <option value="@tipo.Nome">@tipo.Nome</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Localidade" class="control-label"></label>
+                            <input class="form-control" list="Localidades" placeholder="Onde?" asp-for="Localidade" />
+                            <datalist id="Localidades" col-md-3">
+                                @foreach (var item in Model.Localidades)
+                                {
+                                    <option value="@item.Nome" />
+                                }
+                            </datalist>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6"></div>
+                        <label class="form-check-label col-md-6">
+                            <input class="form-check-input" asp-for="EmCondominio" /> @Html.DisplayNameFor(model => model.EmCondominio)
+                        </label>
+                    </div>
+                    <hr/>
+                    <div class="row justify-content-around">
+                        <div class="col-md-3">
+                            <h5>Valor de Venda</h5>
+                            <div class="row">
+                                <label for="MinValue" class="form-label">Valor Mínimo</label>
+                                <input id="MinValue" type="range" class="form-range" value="0" min="0" max="10000000" step="10000" oninput="DisplayMin.value=value" onchange="DisplayMin.value=value" />
+                                <input asp-for="MinValue" class="form-control" type="number" id="DisplayMin" step="10000" value="0" oninput="MinValue.value=value" onchange="MinValue.value=value" />
+                            </div>
+                            <div class="row">
+                                <label for="MaxValue" class="form-label">Valor Máximo</label>
+                                <input id="MaxValue" type="range" class="form-range" value="10000000" min="0" max="10000000" step="10000" oninput="DisplayMax.value=value" onchange="DisplayMax.value=value" />
+                                <input asp-for="MaxValue" class="form-control " type="number" id="DisplayMax" step="10000" value="10000000" oninput="MaxValue.value=value" onchange="MaxValue.value=value" />
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="col-md-3">
+                            <h5>Valor de Locação</h5>
+                            <div class="row">
+                                <label for="MinValueLoc" class="form-label">Valor Mínimo</label>
+                                <input id="MinValueLoc" type="range" class="form-range" value="0" min="0" max="100000" step="500" oninput="DisplayMinLoc.value=value" onchange="DisplayMinLoc.value=value" />
+                                <input asp-for="MinValueLoc" class="form-control" type="number" id="DisplayMinLoc" step="10000" value="0" oninput="MinValueLoc.value=value" onchange="MinValueLoc.value=value" />
+                            </div>
+                            <div class="row">
+                                <label for="valorMax" class="form-label">Valor Máximo</label>
+                                <input id="MaxValueLoc" type="range" class="form-range" value="100000" min="0" max="100000" step="500" oninput="DisplayMaxLoc.value=value" onchange="DisplayMaxLoc.value=value" />
+                                <input asp-for="MaxValueLoc" class="form-control " type="number" id="DisplayMaxLoc" step="500" value="100000" oninput="MaxValueLoc.value=value" onchange="MaxValueLoc.value=value" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>Mais Opções</h5>
+                            <div class="row">
+                                <label asp-for="QtdeQuartos" class="control-label">Número de Quartos</label>
+                                <select class="form-select w-100" asp-for="QtdeQuartos">
+                                    <option value="Indiferente" selected>Indiferente</option>
+                                    <option value="1" >1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4+">4+</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="ComSuite" /> @Html.DisplayNameFor(model => model.ComSuite)
+                                </label>
+                            </div>
+                            <hr/>
+                            <div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="TemQuintal" /> @Html.DisplayNameFor(model => model.TemQuintal)
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="TemPiscina" /> @Html.DisplayNameFor(model => model.TemPiscina)
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="TemQuadra" /> @Html.DisplayNameFor(model => model.TemQuadra)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="TemSalao" /> @Html.DisplayNameFor(model => model.TemSalao)
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="TemAreaGourmet" /> @Html.DisplayNameFor(model => model.TemAreaGourmet)
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="TemChurrasqueira" /> @Html.DisplayNameFor(model => model.TemChurrasqueira)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="d-grid">
+                            <input type="submit" value="Buscar" class="btn btn-dark" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <a class="btn btn-outline-dark" asp-action="Index">Limpar Busca</a>
+                        </div>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </div>
+    
+    <hr />
+   @*  <form asp-action="Index">
+        <div class="row">
+            <div class="col-md-3">
+                <label asp-for="Finalidade" class="control-label"></label>
+                <select class="form-select form-select" asp-for="Finalidade">
+                    <option value="Venda" selected>Venda</option>
+                    <option value="Locação">Locação</option>
+                    <option value="Venda ou Locação">Venda ou Locação</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Tipo" class="control-label"></label>
+                <select class="form-select form-select col-md-3" asp-for="Tipo">
+                    <option value="Todos" selected>Todos</option>
+                    @foreach (var tipo in Model.Tipos)
+                    {
+                        <option value="@tipo.Nome">@tipo.Nome</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Localidade" class="control-label"></label>
+                <input class="form-control" list="Localidades" placeholder="Onde?" asp-for="Localidade" />
+                <datalist id="Localidades" col-md-3">
+                    @foreach (var item in Model.Localidades)
+                    {
+                        <option value="@item.Nome" />
+                    }
+                </datalist>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"></div>
+            <label class="form-check-label col-md-6">
+                <input class="form-check-input" asp-for="EmCondominio" /> @Html.DisplayNameFor(model => model.EmCondominio)
+            </label>
+        </div>
+        <div class="row">
+            <div class="d-grid">
+                <input type="submit" value="Buscar" class="btn btn-dark" />
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <a class="btn btn-outline-dark" asp-action="Index">Limpar Busca</a>
+            </div>
+        </div>
+    </form> *@
+
+    foreach (var item in Model.Propriedades)
     {
         <div class="card mb-3 shadow-lg" style="min-height: 250px;">
             <div class="row no-gutters">
@@ -116,20 +469,33 @@ else
                             <div class="row text-end">
                                 @if (item.CaminhoImagem != "")
                                 {
-                                    <a class="btn btn-dark col" asp-action="Index" asp-controller="AdminImagens" asp-route-id="@item.PropriedadeId" aria-disabled="true">Gerenciar Imagens</a>
+                                    <a class="btn btn-primary col" asp-action="Index" asp-controller="AdminImagens" asp-route-id="@item.PropriedadeId" aria-disabled="true">
+                                        <i class="bi bi-list"></i> Gerenciar Imagens
+                                    </a>
                                 }
                                 else
                                 {
-                                    <a class="btn btn-dark col" asp-action="Upload" asp-controller="AdminImagens" asp-route-id="@item.PropriedadeId">Carregar Imagens</a>
+                                    <a class="btn btn-primary col" asp-action="Upload" asp-controller="AdminImagens" asp-route-id="@item.PropriedadeId">
+                                        <i class="bi bi-upload"></i> Carregar Imagens
+                                    </a>
                                 }
-                                <a class="btn btn-info col" asp-action="Details" asp-route-id="@item.PropriedadeId">Detalhes</a>
-                                <a class="btn btn-warning col" asp-action="Edit" asp-route-id="@item.PropriedadeId">Editar</a>
-                                <a class="btn btn-danger col" asp-action="Delete" asp-route-id="@item.PropriedadeId">Remover</a>
+                                <a class="btn btn-outline-dark col" asp-action="Edit" asp-route-id="@item.PropriedadeId">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                <a class="btn btn-dark col" asp-action="Details" asp-route-id="@item.PropriedadeId">
+                                    <i class="bi bi-eye"></i> Ver Detalhes
+                                </a>
+                                <a class="btn btn-outline-danger col" asp-action="Delete" asp-route-id="@item.PropriedadeId">
+                                    <i class="bi bi-trash"></i> Apagar
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div>
+            <vc:pager paging-list="@Model.Propriedades"></vc:pager>
         </div>
     }
 }

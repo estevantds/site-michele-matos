@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MiMatos.Context;
 using MiMatos.Models;
+using ReflectionIT.Mvc.Paging;
 
 namespace MiMatos.Areas.Admin.Controllers
 {
@@ -15,9 +16,21 @@ namespace MiMatos.Areas.Admin.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string filter, int pageindex = 1, string sort = "Nome")
         {
-            var proprietarios = _context.Proprietarios.ToList();
+            var resultado = _context.Proprietarios.AsNoTracking().AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                resultado = resultado.Where(p => p.Nome.Contains(filter));
+            }
+
+            var proprietarios = await PagingList.CreateAsync(resultado, 5, pageindex, sort, "Nome");
+
+            proprietarios.RouteValue = new RouteValueDictionary
+            {
+                { "filter", filter }
+            };
 
             return View(proprietarios);
         }

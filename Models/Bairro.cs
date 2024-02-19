@@ -11,7 +11,7 @@ namespace MiMatos.Models
 
         [Display(Name = "Nome")]
         [Required(ErrorMessage = "Campo Obrigatório")]
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string Nome { get; set; }
 
         public int CidadeId { get; set; }

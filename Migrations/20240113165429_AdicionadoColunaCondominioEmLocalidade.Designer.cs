@@ -4,6 +4,7 @@ using MiMatos.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MiMatos.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240113165429_AdicionadoColunaCondominioEmLocalidade")]
+    partial class AdicionadoColunaCondominioEmLocalidade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -513,9 +515,6 @@ namespace MiMatos.Migrations
 
                     b.Property<bool>("Locado")
                         .HasColumnType("bit");
-
-                    b.Property<int>("LocalidadeId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Logradouro")
                         .IsRequired()
