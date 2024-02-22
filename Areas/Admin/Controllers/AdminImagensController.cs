@@ -136,6 +136,8 @@ namespace MiMatos.Areas.Admin.Controllers
         public async Task<IActionResult> Destaque(int id)
         {
             var imagem = await _context.Imagens.FindAsync(id);
+            var propriedade = await _context.Propriedades.FirstAsync(i => i.PropriedadeId == imagem.PropriedadeId);
+
             if(imagem == null)
             {
                 return NotFound();
@@ -154,9 +156,13 @@ namespace MiMatos.Areas.Admin.Controllers
                     destaqueAntigo.Destaque = false;
                     _context.Update(destaqueAntigo);
                 }
-
-                _context.SaveChanges();
             }
+
+            propriedade.CaminhoImagem = imagem.Caminho;
+
+            _context.Update(propriedade);
+
+            _context.SaveChanges();
 
             return RedirectToRoute(new { controller = "AdminImagens", action = "Index", id = imagem.PropriedadeId });
         }

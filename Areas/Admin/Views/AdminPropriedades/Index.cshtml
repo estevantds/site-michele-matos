@@ -320,54 +320,6 @@ else
     </div>
     
     <hr />
-   @*  <form asp-action="Index">
-        <div class="row">
-            <div class="col-md-3">
-                <label asp-for="Finalidade" class="control-label"></label>
-                <select class="form-select form-select" asp-for="Finalidade">
-                    <option value="Venda" selected>Venda</option>
-                    <option value="Locação">Locação</option>
-                    <option value="Venda ou Locação">Venda ou Locação</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label asp-for="Tipo" class="control-label"></label>
-                <select class="form-select form-select col-md-3" asp-for="Tipo">
-                    <option value="Todos" selected>Todos</option>
-                    @foreach (var tipo in Model.Tipos)
-                    {
-                        <option value="@tipo.Nome">@tipo.Nome</option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-6">
-                <label asp-for="Localidade" class="control-label"></label>
-                <input class="form-control" list="Localidades" placeholder="Onde?" asp-for="Localidade" />
-                <datalist id="Localidades" col-md-3">
-                    @foreach (var item in Model.Localidades)
-                    {
-                        <option value="@item.Nome" />
-                    }
-                </datalist>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6"></div>
-            <label class="form-check-label col-md-6">
-                <input class="form-check-input" asp-for="EmCondominio" /> @Html.DisplayNameFor(model => model.EmCondominio)
-            </label>
-        </div>
-        <div class="row">
-            <div class="d-grid">
-                <input type="submit" value="Buscar" class="btn btn-dark" />
-            </div>
-        </div>
-        <div class="row">
-            <div>
-                <a class="btn btn-outline-dark" asp-action="Index">Limpar Busca</a>
-            </div>
-        </div>
-    </form> *@
 
     foreach (var item in Model.Propriedades)
     {

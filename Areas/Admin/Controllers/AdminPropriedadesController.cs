@@ -27,7 +27,13 @@ namespace MiMatos.Areas.Admin.Controllers
             var tipos = _context.Tipos.ToList();
             var localidades = _context.Localidades.ToList();
 
-            foreach (var item in resultado)
+
+            if (!string.IsNullOrWhiteSpace(filter))
+                resultado = resultado.Where(p => p.Bairro.Contains(filter));
+
+            imoveisVM.Propriedades = await PagingList.CreateAsync(resultado, 5, pageindex, sort, "Titulo");
+            
+            foreach (var item in imoveisVM.Propriedades)
             {
                 var itemImagens = imagens.Where(i => i.PropriedadeId == item.PropriedadeId);
                 if (itemImagens.Count() > 0)
@@ -38,11 +44,6 @@ namespace MiMatos.Areas.Admin.Controllers
                         item.CaminhoImagem = itemImagens.FirstOrDefault().Caminho;
                 }
             }
-
-            if (!string.IsNullOrWhiteSpace(filter))
-                resultado = resultado.Where(p => p.Bairro.Contains(filter));
-
-            imoveisVM.Propriedades = await PagingList.CreateAsync(resultado, 5, pageindex, sort, "Titulo");
 
             imoveisVM.Propriedades.RouteValue = new RouteValueDictionary
             {
@@ -340,6 +341,28 @@ namespace MiMatos.Areas.Admin.Controllers
             {
                 try
                 {
+                    if (propriedade.EmCondominio)
+                    {
+                        var localidade = propriedade.Bairro.Split(", ");
+
+                        propriedade.Condominio = localidade[0];
+                        propriedade.Bairro = localidade[1];
+                        propriedade.Cidade = localidade[2];
+                        propriedade.Estado = localidade[3];
+
+                        _context.Add(propriedade);
+                    }
+                    else
+                    {
+                        var localidade = propriedade.Bairro.Split(", ");
+
+                        propriedade.Bairro = localidade[0];
+                        propriedade.Cidade = localidade[1];
+                        propriedade.Estado = localidade[2];
+
+                        _context.Add(propriedade);
+                    }
+
                     propriedade.AtualizadoEm = DateTime.Now;
 
                     _context.Update(propriedade);

@@ -159,6 +159,9 @@ namespace MiMatos.Models
         [MaxLength(200)]
         public string CaminhoImagem { get; set; } = "";
 
+        [DisplayName("Destaque")]
+        public bool Destaque { get; set; }
+
         public int ProprietarioId { get; set; }
         public Proprietario Proprietario { get; set; }
 

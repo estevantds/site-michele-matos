@@ -13,11 +13,13 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="PropriedadeId" />
+            <input type="hidden" asp-for="Codigo" />
             <input asp-for="CriadoEm" type="hidden" />
             <div class="row">
                 <div class="col-md-2">
                     <label asp-for="Tipo" class="control-label"></label>
                     <input asp-for="Tipo" class="form-control" disabled/>
+                    <input asp-for="Tipo" type="hidden"/>
                 </div>
                 <div class="col-md-2">
                 </div>
@@ -195,6 +197,12 @@
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="EmCondominio" /> @Html.DisplayNameFor(model => model.EmCondominio)
+                </label>
+            </div>
+            <hr />
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Destaque" /> @Html.DisplayNameFor(model => model.Destaque)
                 </label>
             </div>
             <hr />

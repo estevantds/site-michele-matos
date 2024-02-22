@@ -50,10 +50,115 @@
     <br />
     <br />
     <hr />
-    <br />
-    <br />
     <div class="row">
-        <h2>Últimos Imóveis Adicionados</h2>
+        <h2>Imóveis em Destaque</h2>
+        @foreach (var item in Model.Propriedades.Where(i => i.Destaque))
+        {
+            <div class="col">
+                <div class="card shadow-lg" style="width: 25rem;">
+                    @if (item.CaminhosImagens.Count < 1)
+                    {
+                        <img src="@item.CaminhoImagem" class="card-img-top" alt="..." height="375">
+                    }
+                    else
+                    {
+                        <div id="carouselFade" class="carousel carousel-fade" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="@item.CaminhoImagem" class="card-img-top" alt="..." height="375">
+                                </div>
+                                @foreach (var caminho in item.CaminhosImagens)
+                                {
+                                    <div class="carousel-item">
+                                        <img src="@caminho" class="card-img-top" alt="..." height="375">
+                                    </div>
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselFade" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Próximo</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselFade" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Anterior</span>
+                            </button>
+                        </div>
+                    }
+                    <a class="card-body" asp-controller="Propriedade" asp-action="Propriedade" asp-route-id="@item.PropriedadeId" style="text-decoration:none; color: black">
+                        <div class="row">
+                            <small style="height: 1em;">@item.Codigo</small>
+                        </div>
+                        <div class="row">
+                            <h4 class="card-title" style="height: 2em;">@item.Tipo, @item.Bairro, @item.Cidade</h4>
+                        </div>
+                        <div class="row">
+                            @if (item.ParaVenda)
+                            {
+                                <div class="col-md-6">
+                                    <small>Venda</small>
+                                    <h5>R$ @item.PrecoVenda</h5>
+                                </div>
+                            }
+                            @if (item.ParaLocacao)
+                            {
+                                <div class="col-md-6">
+                                    <small>Locação</small>
+                                    <h5>R$ @item.PrecoLocacao</h5>
+                                </div>
+                            }
+                        </div>
+                        <div class="row">
+                            <div>
+                                <ul class="col-md-12 list-group list-group-horizontal ">
+                                    <li class="col-md-4 list-group-item">
+                                        <div class="d-flex justify-content-center">
+                                            Dormitórios
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <span class="badge bg-primary rounded-pill">@item.QtdeQuartos</span>
+                                        </div>
+                                    </li>
+                                    <li class="col-md-4 list-group-item">
+                                        <div class="d-flex justify-content-center">
+                                            Banheiros
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <span class="badge bg-primary rounded-pill">@item.QtdeBanheiros</span>
+                                        </div>
+                                    </li>
+                                    <li class="col-md-4 list-group-item">
+                                        <div class="d-flex justify-content-center">
+                                            Garagem
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <span class="badge bg-primary rounded-pill">@item.CapacidadeGaragem</span>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <small>@item.AreaTotal m²</small>
+                        </div>
+                        <div class="row">
+                            <p class="card-text" style="height: 6em;">
+                                @item.Descricao
+                            </p>
+                        </div>
+                        <div class="row">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+    <br />
+    <br />
+    <br />
+    <hr />
+    <div class="row">
+        <h2>Imóveis Recém Adicionados</h2>
     </div>
     <br />
     <br />
@@ -68,7 +173,7 @@
                     }
                     else
                     {
-                        <div id="carouselFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                        <div id="carouselFade" class="carousel carousel-fade" data-bs-ride="carousel">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
                                     <img src="@item.CaminhoImagem" class="card-img-top" alt="..." height="375">

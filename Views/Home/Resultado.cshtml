@@ -1,8 +1,162 @@
-﻿@model IEnumerable<MiMatos.Models.Propriedade>
+﻿@model MiMatos.ViewModels.ResultadoViewModel
 
 <div class="container">
+    <h1>Mostrando resultados de @Model.Titulo</h1>
+    <hr/>
+    @if (Model.Resultado.Count() == 0)
+    {
+        <div class="row">
+            <h2>:( Nenhum resultado para esta busca.</h2>
+        </div>
+        <hr/>
+        <br/>
+    }
+    <div class="dropdown w-100">
+        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Filtros
+        </button>
+        <ul class="dropdown-menu w-100" aria-labelledby="dropdownButton">
+            <li>
+                <form class="dropdown-item" asp-action="Filtro">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label asp-for="ImoveisVM.Finalidade" class="control-label"></label>
+                            <select class="form-select" asp-for="ImoveisVM.Finalidade">
+                                <option value="Venda" selected>Venda</option>
+                                <option value="Locação">Locação</option>
+                                <option value="Venda ou Locação">Venda ou Locação</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="ImoveisVM.Tipo" class="control-label"></label>
+                            <select class="form-select" asp-for="ImoveisVM.Tipo">
+                                <option value="Todos" selected>Todos</option>
+                                @foreach (var tipo in Model.ImoveisVM.Tipos)
+                                {
+                                    <option value="@tipo.Nome">@tipo.Nome</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ImoveisVM.Localidade" class="control-label"></label>
+                            <input class="form-control" list="Localidades" placeholder="Onde?" asp-for="ImoveisVM.Localidade" />
+                            <datalist id="Localidades" col-md-3">
+                                @foreach (var item in Model.ImoveisVM.Localidades)
+                                {
+                                    <option value="@item.Nome" />
+                                }
+                            </datalist>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6"></div>
+                        <label class="form-check-label col-md-6">
+                            <input class="form-check-input" asp-for="ImoveisVM.EmCondominio" /> @Html.DisplayNameFor(model => model.ImoveisVM.EmCondominio)
+                        </label>
+                    </div>
+                    <hr />
+                    <div class="row justify-content-around">
+                        <div class="col-md-3">
+                            <h5>Valor de Venda</h5>
+                            <div class="row">
+                                <label for="MinValue" class="form-label">Valor Mínimo</label>
+                                <input id="MinValue" type="range" class="form-range" value="0" min="0" max="10000000" step="10000" oninput="DisplayMin.value=value" onchange="DisplayMin.value=value" />
+                                <input asp-for="ImoveisVM.MinValue" class="form-control" type="number" id="DisplayMin" step="10000" value="0" oninput="MinValue.value=value" onchange="MinValue.value=value" />
+                            </div>
+                            <div class="row">
+                                <label for="MaxValue" class="form-label">Valor Máximo</label>
+                                <input id="MaxValue" type="range" class="form-range" value="10000000" min="0" max="10000000" step="10000" oninput="DisplayMax.value=value" onchange="DisplayMax.value=value" />
+                                <input asp-for="ImoveisVM.MaxValue" class="form-control " type="number" id="DisplayMax" step="10000" value="10000000" oninput="MaxValue.value=value" onchange="MaxValue.value=value" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-3">
+                            <h5>Valor de Locação</h5>
+                            <div class="row">
+                                <label for="MinValueLoc" class="form-label">Valor Mínimo</label>
+                                <input id="MinValueLoc" type="range" class="form-range" value="0" min="0" max="100000" step="500" oninput="DisplayMinLoc.value=value" onchange="DisplayMinLoc.value=value" />
+                                <input asp-for="ImoveisVM.MinValueLoc" class="form-control" type="number" id="DisplayMinLoc" step="10000" value="0" oninput="MinValueLoc.value=value" onchange="MinValueLoc.value=value" />
+                            </div>
+                            <div class="row">
+                                <label for="valorMax" class="form-label">Valor Máximo</label>
+                                <input id="MaxValueLoc" type="range" class="form-range" value="100000" min="0" max="100000" step="500" oninput="DisplayMaxLoc.value=value" onchange="DisplayMaxLoc.value=value" />
+                                <input asp-for="ImoveisVM.MaxValueLoc" class="form-control " type="number" id="DisplayMaxLoc" step="500" value="100000" oninput="MaxValueLoc.value=value" onchange="MaxValueLoc.value=value" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>Mais Opções</h5>
+                            <div class="row">
+                                <label asp-for="ImoveisVM.QtdeQuartos" class="control-label">Número de Quartos</label>
+                                <select class="form-select w-100" asp-for="ImoveisVM.QtdeQuartos">
+                                    <option value="Indiferente" selected>Indiferente</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4+">4+</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="ImoveisVM.ComSuite" /> @Html.DisplayNameFor(model => model.ImoveisVM.ComSuite)
+                                </label>
+                            </div>
+                            <hr />
+                            <div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="ImoveisVM.TemQuintal" /> @Html.DisplayNameFor(model => model.ImoveisVM.TemQuintal)
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="ImoveisVM.TemPiscina" /> @Html.DisplayNameFor(model => model.ImoveisVM.TemPiscina)
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="ImoveisVM.TemQuadra" /> @Html.DisplayNameFor(model => model.ImoveisVM.TemQuadra)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="ImoveisVM.TemSalao" /> @Html.DisplayNameFor(model => model.ImoveisVM.TemSalao)
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="ImoveisVM.TemAreaGourmet" /> @Html.DisplayNameFor(model => model.ImoveisVM.TemAreaGourmet)
+                                            </label>
+                                        </div>
+                                        <div class="row">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" asp-for="ImoveisVM.TemChurrasqueira" /> @Html.DisplayNameFor(model => model.ImoveisVM.TemChurrasqueira)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="d-grid">
+                            <input type="submit" value="Buscar" class="btn btn-dark" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <a class="btn btn-outline-dark" asp-action="Limpar">Limpar Busca</a>
+                        </div>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </div>
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        @foreach (var item in Model)
+        @foreach (var item in Model.Resultado)
         {
             <div class="col">
                 <div class="card shadow-lg" style="width: 25rem;">
@@ -103,4 +257,113 @@
             </div>
         }
     </div>
+    <br/>
+    <br/>
+    <hr/>
+    <br />
+    <br />
+    <div class="row">
+        <h2>Imóveis em Destaque</h2>
+        @foreach (var item in Model.Destaques)
+        {
+            <div class="col">
+                <div class="card shadow-lg" style="width: 25rem;">
+                    @if (item.CaminhosImagens.Count < 1)
+                    {
+                        <img src="@item.CaminhoImagem" class="card-img-top" alt="..." height="375">
+                    }
+                    else
+                    {
+                        <div id="carouselFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="@item.CaminhoImagem" class="card-img-top" alt="..." height="375">
+                                </div>
+                                @foreach (var caminho in item.CaminhosImagens)
+                                {
+                                    <div class="carousel-item">
+                                        <img src="@caminho" class="card-img-top" alt="..." height="375">
+                                    </div>
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselFade" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Próximo</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselFade" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Anterior</span>
+                            </button>
+                        </div>
+                    }
+                    <a class="card-body" asp-controller="Propriedade" asp-action="Propriedade" asp-route-id="@item.PropriedadeId" style="text-decoration:none; color: black">
+                        <div class="row">
+                            <small style="height: 1em;">@item.Codigo</small>
+                        </div>
+                        <div class="row">
+                            <h4 class="card-title" style="height: 2em;">@item.Tipo, @item.Bairro, @item.Cidade</h4>
+                        </div>
+                        <div class="row">
+                            @if (item.ParaVenda)
+                            {
+                                <div class="col-md-6">
+                                    <small>Venda</small>
+                                    <h5>R$ @item.PrecoVenda</h5>
+                                </div>
+                            }
+                            @if (item.ParaLocacao)
+                            {
+                                <div class="col-md-6">
+                                    <small>Locação</small>
+                                    <h5>R$ @item.PrecoLocacao</h5>
+                                </div>
+                            }
+                        </div>
+                        <div class="row">
+                            <div>
+                                <ul class="col-md-12 list-group list-group-horizontal ">
+                                    <li class="col-md-4 list-group-item">
+                                        <div class="d-flex justify-content-center">
+                                            Dormitórios
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <span class="badge bg-primary rounded-pill">@item.QtdeQuartos</span>
+                                        </div>
+                                    </li>
+                                    <li class="col-md-4 list-group-item">
+                                        <div class="d-flex justify-content-center">
+                                            Banheiros
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <span class="badge bg-primary rounded-pill">@item.QtdeBanheiros</span>
+                                        </div>
+                                    </li>
+                                    <li class="col-md-4 list-group-item">
+                                        <div class="d-flex justify-content-center">
+                                            Garagem
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <span class="badge bg-primary rounded-pill">@item.CapacidadeGaragem</span>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <small>@item.AreaTotal m²</small>
+                        </div>
+                        <div class="row">
+                            <p class="card-text" style="height: 6em;">
+                                @item.Descricao
+                            </p>
+                        </div>
+                        <div class="row">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+
 </div>
