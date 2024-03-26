@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
 
@@ -46,6 +47,17 @@ namespace MiMatos.Models
         [Display(Name = "Atualizado em")]
         public DateTime AtualizadoEm { get; set; }
 
+        [Display(Name = "Cadastro do Site")]
+        public bool CadastroSite { get; set; }
+
+        [DisplayName("Mensagem")]
+        [Required(ErrorMessage = "Campo Obrigatório")]
+        [MaxLength(1024)]
+        public string Mensagem { get; set; }
+
         public ICollection<Propriedade> Propriedades { get; set; }
+
+        [NotMapped]
+        public string TextoNascimento { get; set; }
     }
 }

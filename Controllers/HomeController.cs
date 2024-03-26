@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MiMatos.Context;
 using MiMatos.Models;
 using MiMatos.Repositories.Interfaces;
 using MiMatos.ViewModels;
+using ReflectionIT.Mvc.Paging;
 
 namespace MiMatos.Controllers
 {
@@ -243,6 +245,116 @@ namespace MiMatos.Controllers
             resultadoVM.Destaques = SetImagens(destaques);
 
             return resultadoVM;
+        }
+
+        public async Task<IActionResult> Comprar(string filter, int pageindex = 1, string sort = "CriadoEm")
+        {
+            var imoveisVM = new ImoveisViewModel();
+            var resultado = _context.Propriedades.AsNoTracking().AsQueryable();
+            var tipos = _context.Tipos.ToList();
+            var localidades = _context.Localidades.ToList();
+
+
+            imoveisVM.Propriedades = await PagingList.CreateAsync(resultado.Where(i => i.ParaVenda), 5, pageindex, sort, "Titulo");
+
+            foreach (var propriedade in imoveisVM.Propriedades)
+            {
+                var imagens = _context.Imagens.Where(i => i.PropriedadeId == propriedade.PropriedadeId).ToList();
+
+                if (imagens.Count() > 0)
+                {
+                    var imagensDestaques = imagens.Where(i => i.Destaque);
+                    if (imagensDestaques.Count() > 0)
+                    {
+                        foreach (var imagem in imagensDestaques)
+                        {
+                            if (imagem.Destaque)
+                            {
+                                propriedade.CaminhoImagem = imagem.Caminho;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        propriedade.CaminhoImagem = imagens.FirstOrDefault().Caminho;
+                    }
+
+                    foreach (var imagem in imagens)
+                    {
+                        if (imagem.Caminho != propriedade.CaminhoImagem)
+                        {
+                            if (propriedade.CaminhosImagens.Count() < 6)
+                            {
+                                propriedade.CaminhosImagens.Add(imagem.Caminho);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    propriedade.CaminhoImagem = "/images/preparando-imovel.png";
+                }
+            }
+
+            imoveisVM.Tipos = tipos;
+            imoveisVM.Localidades = localidades;
+
+            return View(imoveisVM);
+        }
+
+        public async Task<IActionResult> Alugar(string filter, int pageindex = 1, string sort = "CriadoEm")
+        {
+            var imoveisVM = new ImoveisViewModel();
+            var resultado = _context.Propriedades.AsNoTracking().AsQueryable();
+            var tipos = _context.Tipos.ToList();
+            var localidades = _context.Localidades.ToList();
+
+
+            imoveisVM.Propriedades = await PagingList.CreateAsync(resultado.Where(i => i.ParaLocacao), 5, pageindex, sort, "Titulo");
+
+            foreach (var propriedade in imoveisVM.Propriedades)
+            {
+                var imagens = _context.Imagens.Where(i => i.PropriedadeId == propriedade.PropriedadeId).ToList();
+
+                if (imagens.Count() > 0)
+                {
+                    var imagensDestaques = imagens.Where(i => i.Destaque);
+                    if (imagensDestaques.Count() > 0)
+                    {
+                        foreach (var imagem in imagensDestaques)
+                        {
+                            if (imagem.Destaque)
+                            {
+                                propriedade.CaminhoImagem = imagem.Caminho;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        propriedade.CaminhoImagem = imagens.FirstOrDefault().Caminho;
+                    }
+
+                    foreach (var imagem in imagens)
+                    {
+                        if (imagem.Caminho != propriedade.CaminhoImagem)
+                        {
+                            if (propriedade.CaminhosImagens.Count() < 6)
+                            {
+                                propriedade.CaminhosImagens.Add(imagem.Caminho);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    propriedade.CaminhoImagem = "/images/preparando-imovel.png";
+                }
+            }
+
+            imoveisVM.Tipos = tipos;
+            imoveisVM.Localidades = localidades;
+
+            return View(imoveisVM);
         }
 
         private List<Propriedade> SetImagens (List<Propriedade> propriedades)

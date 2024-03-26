@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MiMatos.Models.Cliente>
+﻿@model ReflectionIT.Mvc.Paging.PagingList<MiMatos.Models.Cliente>
 
 @{
     ViewData["Title"] = "Index";
@@ -8,6 +8,22 @@
 <p>
     <a class="btn btn-dark" asp-action="Create">+ Adicionar Cliente</a>
 </p>
+<hr />
+
+<form method="get" class="form-inline">
+    <div class="row">
+        <div class=" col-md-6">
+            <input name="filter" class="form-control" placeholder="Buscar" value="@Model.RouteValue["Filter"]" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-dark">
+                Buscar
+            </button>
+        </div>
+    </div>
+</form>
 @foreach (var item in Model) {
     <div class="card shadow-lg col-md-12">
         <div class="card-body">
@@ -28,7 +44,7 @@
                 </li>
                 <li class="list-group-item"><b>Outro Telefone:</b> @item.OutroTelefone</li>
                 <li class="list-group-item"><b>e-mail:</b> @item.Email</li>
-                <li class="list-group-item"><b>Nascimento:</b> @item.Nascimento</li>
+                <li class="list-group-item"><b>Nascimento:</b> @item.TextoNascimento</li>
                 <li class="list-group-item"><b>Data de Cadastro:</b> @item.CriadoEm</li>
                 <li class="list-group-item"><b>Última Edição:</b> @item.AtualizadoEm</li>
                 <li class="list-group-item">
@@ -56,3 +72,6 @@
         </div>
     </div>
 }
+<div>
+    <vc:pager paging-list="@Model"></vc:pager>
+</div>

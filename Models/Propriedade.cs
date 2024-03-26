@@ -88,6 +88,9 @@ namespace MiMatos.Models
         [DisplayName("Tem Churrasqueira?")]
         public bool TemChurrasqueira { get; set; }
 
+        [DisplayName("Aceita Permuta")]
+        public bool AceitaPermuta { get; set; }
+
         [DisplayName("Estado")]
         [Required(ErrorMessage = "Campo Obrigatório.")]
         [MaxLength(20)]
@@ -134,10 +137,10 @@ namespace MiMatos.Models
         [DisplayName("Última Edição")]
         public DateTime AtualizadoEm { get; set; }
 
-        [DisplayName("Foi Vendido?")]
+        [DisplayName("Foi Vendido")]
         public bool Vendido { get; set; }
 
-        [DisplayName("Está Alugado?")]
+        [DisplayName("Está Alugado")]
         public bool Locado { get; set; }
 
         [DisplayName("Data da Locação")]

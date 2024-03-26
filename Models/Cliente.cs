@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MiMatos.Models
 {
@@ -40,7 +41,6 @@ namespace MiMatos.Models
         public string Mensagem { get; set; }
 
         [Display(Name = "Data de Nascimento")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MMM/yyyy}")]
         public DateTime Nascimento { get; set; }
 
         [Display(Name = "Criado em")]
@@ -48,5 +48,8 @@ namespace MiMatos.Models
 
         [Display(Name = "Atualizado em")]
         public DateTime AtualizadoEm { get; set; }
+
+        [NotMapped]
+        public string TextoNascimento { get; set; }
     }
 }

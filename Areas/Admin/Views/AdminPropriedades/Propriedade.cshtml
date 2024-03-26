@@ -23,7 +23,9 @@
         <div class="col-md-6">
             <div class="mb-3 d-flex justify-content-center">
                 <div class="row">
-                    @{ var carouselIndex = 0; }
+                    @{
+                        var carouselIndex = 0;
+                    }
                     @foreach (var caminho in Model.CaminhosImagens)
                     {
                         { carouselIndex++; }
@@ -107,10 +109,11 @@
 
                 <hr />
 
-                <div class="row justify-content-evenly">
-                    <a href=@link class="btn btn-success">
-                        <i class="bi bi-whatsapp"></i> Chamar no WhatsApp
+                <div class="row">
+                    <a class="btn btn-outline-dark col" asp-action="Edit" asp-route-id="@Model.PropriedadeId">
+                        <i class="bi bi-pencil"></i> Editar
                     </a>
+                    <a href="javascript: history.go(-1)" class="btn btn-dark col">Voltar</a>
                 </div>
             </div>
         </div>
@@ -218,12 +221,13 @@
 
             </div>
         </div>
-        
+
     </div>
-    <div>
-        <a href=@link class="btn btn-success">
-            <i class="bi bi-whatsapp"></i> Chamar no WhatsApp
+    <div class="row">
+        <a class="btn btn-outline-dark col" asp-action="Edit" asp-route-id="@Model.PropriedadeId">
+            <i class="bi bi-pencil"></i> Editar
         </a>
+        <a href="javascript: history.go(-1)" class="btn btn-dark col">Voltar</a>
     </div>
 </div>
 
@@ -257,3 +261,5 @@
         </div>
     </div>
 </div>
+
+

@@ -1,7 +1,7 @@
 ﻿@model MiMatos.Models.Proprietario
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Editar Proprietário";
 }
 
 <h1>Editar</h1>
@@ -14,6 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ProprietarioId" />
             <input asp-for="CriadoEm" type="hidden" />
+            <input type="hidden" asp-for="CadastroSite" />
             <div class="form-group">
                 <label asp-for="Nome" class="control-label"></label>
                 <input asp-for="Nome" class="form-control" />
@@ -48,6 +49,10 @@
             <div class="form-group">
                 <label asp-for="Nascimento" class="control-label"></label>
                 <input type="date" asp-for="Nascimento" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Mensagem" class="control-label">Observação</label>
+                <textarea asp-for="Mensagem" class="form-control"></textarea>
             </div>
             <br />
             <div class="form-group">

@@ -1,0 +1,55 @@
+﻿@model MiMatos.Models.Proprietario
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Deseja anunciar seu imóvel?</h1>
+
+<h4>Preencha abaixo</h4>
+<p>Você deve preencher seu nome, celular e deixar sua mensagem sobre o imóvel que deseja anunciar. Assim, entraremos em contato o mais breve possível.</p>
+
+<form asp-action="CreateProp">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Nome" class="control-label"></label>
+        <input asp-for="Nome" class="form-control" />
+        <span asp-validation-for="Nome" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Celular" class="control-label"></label>
+        <input asp-for="Celular" class="form-control" />
+        <span asp-validation-for="Celular" class="text-danger"></span>
+    </div>
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="IsWhatsApp" /> @Html.DisplayNameFor(model => model.IsWhatsApp)
+        </label>
+    </div>
+    <div class="form-group">
+        <label asp-for="OutroTelefone" class="control-label"></label>
+        <input asp-for="OutroTelefone" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Mensagem" class="control-label"></label>
+        <textarea asp-for="Mensagem" class="form-control"></textarea>
+        <span asp-validation-for="Mensagem" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Enviar" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a class="btn btn-outline-dark" asp-action="Index" asp-controller="Home">Cancelar</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

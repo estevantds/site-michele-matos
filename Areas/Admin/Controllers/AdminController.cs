@@ -6,6 +6,7 @@ using MiMatos.ViewModels;
 namespace MiMatos.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly AppDbContext _context;

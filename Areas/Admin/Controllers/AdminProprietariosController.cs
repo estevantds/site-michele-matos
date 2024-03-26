@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MiMatos.Context;
 using MiMatos.Models;
@@ -7,6 +8,7 @@ using ReflectionIT.Mvc.Paging;
 namespace MiMatos.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class AdminProprietariosController : Controller
     {
         private readonly AppDbContext _context;
@@ -16,7 +18,7 @@ namespace MiMatos.Areas.Admin.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(string filter, int pageindex = 1, string sort = "Nome")
+        public async Task<IActionResult> Index(string filter, int pageindex = 1, string sort = "CriadoEm")
         {
             var resultado = _context.Proprietarios.AsNoTracking().AsQueryable();
 
@@ -25,12 +27,18 @@ namespace MiMatos.Areas.Admin.Controllers
                 resultado = resultado.Where(p => p.Nome.Contains(filter));
             }
 
-            var proprietarios = await PagingList.CreateAsync(resultado, 5, pageindex, sort, "Nome");
+            var proprietarios = await PagingList.CreateAsync(resultado, 5, pageindex, sort, "CriadoEm");
 
             proprietarios.RouteValue = new RouteValueDictionary
             {
                 { "filter", filter }
             };
+
+            foreach (var item in proprietarios)
+            {
+                var dateOnly = new DateOnly(item.Nascimento.Year, item.Nascimento.Month, item.Nascimento.Day);
+                item.TextoNascimento = dateOnly.ToString();
+            }
 
             return View(proprietarios);
         }
@@ -68,7 +76,7 @@ namespace MiMatos.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            proprietario.Nascimento = proprietario.Nascimento.Date;
+
             return View(proprietario);
         }
 

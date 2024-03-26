@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MiMatos.Context;
 using MiMatos.Models;
 using MiMatos.ViewModels;
@@ -8,6 +10,7 @@ using ReflectionIT.Mvc.Paging;
 namespace MiMatos.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class AdminPropriedadesController : Controller
     {
         private string _serverPath;
@@ -79,13 +82,30 @@ namespace MiMatos.Areas.Admin.Controllers
             }
 
             if (imoveisVM.Finalidade == "Venda")
-                resultado = resultado.Where(i => i.ParaVenda && !i.ParaLocacao && i.PrecoVenda >= imoveisVM.MinValue && i.PrecoVenda <= imoveisVM.MaxValue);
-            else if (imoveisVM.Finalidade == "Locação")
-                resultado = resultado.Where(i => i.ParaLocacao && !i.ParaVenda && i.PrecoLocacao >= imoveisVM.MinValueLoc && i.PrecoLocacao <= imoveisVM.MaxValueLoc);
-            else
-                resultado = resultado.Where(i => i.ParaVenda && i.PrecoVenda >= imoveisVM.MinValue && i.PrecoVenda <= imoveisVM.MaxValue || 
-                                                 i.ParaLocacao && i.PrecoLocacao >= imoveisVM.MinValueLoc && i.PrecoLocacao <= imoveisVM.MaxValueLoc);
+            {
+                resultado = resultado.Where(i => i.ParaVenda && !i.ParaLocacao);
 
+                if (!(imoveisVM.MaxValue == 10000000 && imoveisVM.MinValue == 0))
+                    resultado = resultado.Where(i => i.PrecoVenda >= imoveisVM.MinValue && i.PrecoVenda <= imoveisVM.MaxValue);
+            }
+            else if (imoveisVM.Finalidade == "Locação")
+            {
+                resultado = resultado.Where(i => i.ParaLocacao && !i.ParaVenda);
+
+                if (!(imoveisVM.MaxValueLoc == 100000 && imoveisVM.MinValueLoc == 0))
+                    resultado = resultado.Where(i => i.PrecoLocacao >= imoveisVM.MinValueLoc && i.PrecoLocacao <= imoveisVM.MaxValueLoc);
+            }
+            else
+            {
+                resultado = resultado.Where(i => i.ParaVenda || i.ParaLocacao);
+
+                if (!(imoveisVM.MaxValue == 10000000 && imoveisVM.MinValue == 0))
+                    resultado = resultado.Where(i => i.PrecoVenda >= imoveisVM.MinValue && i.PrecoVenda <= imoveisVM.MaxValue);
+
+                if (!(imoveisVM.MaxValueLoc == 100000 && imoveisVM.MinValueLoc == 0))
+                    resultado = resultado.Where(i => i.PrecoLocacao >= imoveisVM.MinValueLoc && i.PrecoLocacao <= imoveisVM.MaxValueLoc);
+            }
+            
             if (imoveisVM.Tipo == "Todos")
             {
                 if (localidadeId != 0)
@@ -103,11 +123,6 @@ namespace MiMatos.Areas.Admin.Controllers
                     imoveisVM.TituloBusca = "Resultado de " + imoveisVM.Tipo + " para " + imoveisVM.Finalidade + " em todas as localidades";
             }
 
-            if (imoveisVM.Finalidade == "Venda" || imoveisVM.Finalidade == "Venda ou Locação")
-                resultado = resultado.Where(i => i.PrecoVenda >= imoveisVM.MinValue && i.PrecoVenda <= imoveisVM.MaxValue);
-
-            if(imoveisVM.Finalidade == "Locação" || imoveisVM.Finalidade == "Venda ou Locação")
-                resultado = resultado.Where(i => i.PrecoLocacao >= imoveisVM.MinValueLoc && i.PrecoLocacao <= imoveisVM.MaxValueLoc);
 
             if(imoveisVM.QtdeQuartos != "Indiferente")
             {
@@ -137,6 +152,9 @@ namespace MiMatos.Areas.Admin.Controllers
 
             if (imoveisVM.TemChurrasqueira)
                 resultado = resultado.Where(i => i.TemChurrasqueira);
+
+            if (imoveisVM.AceitaPermuta)
+                resultado = resultado.Where(i => i.AceitaPermuta);
 
             if (resultado.Count() == 0)
                 imoveisVM.TituloBusca = "Nenhum imóvel encontrado. Revise os filtros.";
@@ -246,11 +264,32 @@ namespace MiMatos.Areas.Admin.Controllers
             propriedade.AtualizadoEm = DateTime.Now;
 
             propriedade.ProprietarioId = _context.Proprietarios.FirstOrDefault(o => o.Nome == propriedade.NomeProprietario).ProprietarioId;
+            
+            var localidade = propriedade.Bairro.Split(", ");
+
+            if (localidade.Length == 4)
+                propriedade.EmCondominio = true;
+
+            if (localidade.Length == 3 && propriedade.EmCondominio)
+            {
+                ModelState.AddModelError("Condomímio", "Localidade não é um condomínio");
+                propriedade.Tipos = _context.Tipos.ToList();
+                propriedade.Proprietarios = _context.Proprietarios.ToList();
+
+                var localidades = _context.Localidades.ToList();
+
+                propriedade.Localidades = new List<string>();
+
+                foreach (var item in localidades)
+                {
+                    propriedade.Localidades.Add(item.Nome);
+                }
+
+                return View(propriedade);
+            }
 
             if (propriedade.EmCondominio)
             {
-                var localidade = propriedade.Bairro.Split(", ");
-
                 propriedade.Condominio = localidade[0];
                 propriedade.Bairro = localidade[1];
                 propriedade.Cidade = localidade[2];
@@ -260,8 +299,6 @@ namespace MiMatos.Areas.Admin.Controllers
             }
             else
             {
-                var localidade = propriedade.Bairro.Split(", ");
-
                 propriedade.Bairro = localidade[0];
                 propriedade.Cidade = localidade[1];
                 propriedade.Estado = localidade[2];
@@ -296,6 +333,16 @@ namespace MiMatos.Areas.Admin.Controllers
             if (propriedade == null)
             {
                 return NotFound();
+            }
+
+            if (propriedade.EmCondominio)
+            {
+                var condominio = _context.Condominios.FirstOrDefault(i => i.Nome == propriedade.Condominio);
+                propriedade.Bairro = condominio.Nome + ", " + condominio.Localidade;
+            }
+            else
+            {
+                propriedade.Bairro = _context.Localidades.Find(propriedade.LocalidadeId).Nome;
             }
 
             var proprietarios = _context.Proprietarios.ToList();
@@ -341,9 +388,11 @@ namespace MiMatos.Areas.Admin.Controllers
             {
                 try
                 {
+                    propriedade.LocalidadeId = _context.Localidades.FirstOrDefault(i => i.Nome == propriedade.Bairro).LocalidadeId;
+                    
                     if (propriedade.EmCondominio)
                     {
-                        var localidade = propriedade.Bairro.Split(", ");
+                        var localidade = propriedade.Bairro.Split(", "); 
 
                         propriedade.Condominio = localidade[0];
                         propriedade.Bairro = localidade[1];
@@ -364,6 +413,7 @@ namespace MiMatos.Areas.Admin.Controllers
                     }
 
                     propriedade.AtualizadoEm = DateTime.Now;
+
 
                     _context.Update(propriedade);
                     await _context.SaveChangesAsync();
@@ -435,6 +485,47 @@ namespace MiMatos.Areas.Admin.Controllers
         {
             var proprietario = _context.Proprietarios.Find(id);
             return View(proprietario);
+        }
+
+        public async Task<IActionResult> Propriedade(int id)
+        {
+            var propriedade = await _context.Propriedades.FindAsync(id);
+
+            var imagens = _context.Imagens.Where(i => i.PropriedadeId == propriedade.PropriedadeId).ToList();
+
+            if (imagens.Count() > 0)
+            {
+                var imagensDestaques = imagens.Where(i => i.Destaque);
+                if (imagensDestaques.Count() > 0)
+                {
+                    foreach (var imagem in imagensDestaques)
+                    {
+                        if (imagem.Destaque)
+                        {
+                            propriedade.CaminhoImagem = imagem.Caminho;
+                        }
+                    }
+                }
+                else
+                {
+                    propriedade.CaminhoImagem = imagens.FirstOrDefault().Caminho;
+                }
+
+                foreach (var imagem in imagens)
+                {
+                    if (imagem.Caminho != propriedade.CaminhoImagem)
+                    {
+                        propriedade.CaminhosImagens.Add(imagem.Caminho);
+                    }
+                }
+            }
+            else
+            {
+                propriedade.CaminhoImagem = "/images/preparando-imovel.png";
+                propriedade.CaminhosImagens.Add(propriedade.CaminhoImagem);
+            }
+
+            return View(propriedade);
         }
 
         private bool PropriedadeExists(int id)

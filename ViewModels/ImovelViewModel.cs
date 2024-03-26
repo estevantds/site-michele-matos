@@ -33,6 +33,9 @@ namespace MiMatos.ViewModels
 
         [DisplayName("Com Suíte")]
         public bool ComSuite { get; set; }
+
+        [DisplayName("Somente que aceitam permuta")]
+        public bool AceitaPermuta { get; set; }
         public string Tipo { get; set; }
         public string Localidade { get; set; }
         public string Finalidade { get; set; }

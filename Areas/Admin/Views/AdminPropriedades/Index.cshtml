@@ -93,6 +93,13 @@ else if (Model.Propriedades.Count().Equals(0) && !string.IsNullOrEmpty(Model.Tit
                         <div class="col-md-3">
                             <h5>Mais Opções</h5>
                             <div class="row">
+                                <hr />
+                                <div class="form-group form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" asp-for="AceitaPermuta" /> @Html.DisplayNameFor(model => model.AceitaPermuta)
+                                    </label>
+                                </div>
+                                <hr/>
                                 <label asp-for="QtdeQuartos" class="control-label">Número de Quartos</label>
                                 <select class="form-select w-100" asp-for="QtdeQuartos">
                                     <option value="Indiferente" selected>Indiferente</option>
@@ -249,6 +256,11 @@ else
                         <div class="col-md-3">
                             <h5>Mais Opções</h5>
                             <div class="row">
+                                <hr />
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="AceitaPermuta" /> @Html.DisplayNameFor(model => model.AceitaPermuta)
+                                </label>
+                                <hr />
                                 <label asp-for="QtdeQuartos" class="control-label">Número de Quartos</label>
                                 <select class="form-select w-100" asp-for="QtdeQuartos">
                                     <option value="Indiferente" selected>Indiferente</option>
@@ -321,8 +333,9 @@ else
     
     <hr />
 
-    foreach (var item in Model.Propriedades)
-    {
+    <div class="container" id="desktop-view">
+        @foreach (var item in Model.Propriedades)
+        {
         <div class="card mb-3 shadow-lg" style="min-height: 250px;">
             <div class="row no-gutters">
                 <div class="col-4">
@@ -345,15 +358,27 @@ else
                             <div class="col-md-9">
                                 @if (item.ParaVenda)
                                 {
-                                    <span class="badge bg-success">Venda</span>
+                                    <span class="badge bg-primary">Venda</span>
                                 }
                                 @if (item.ParaLocacao)
                                 {
-                                    <span class="badge bg-danger">Locação</span>
+                                    <span class="badge bg-warning">Locação</span>
                                 }
                                 @if (!(item.Vendido || item.Locado))
                                 {
                                     <span class="badge bg-success">Disponível</span>
+                                }
+                                @if (item.AceitaPermuta)
+                                {
+                                    <i class="bi bi-arrow-left-right"> Aceita Permuta</i>
+                                }
+                                @if (item.Vendido)
+                                {
+                                    <span class="badge bg-danger">Vendido</span>
+                                }
+                                @if (item.Locado)
+                                {
+                                    <span class="badge bg-danger">Locado</span>
                                 }
                             </div>
                             <div class="col-md-3">
@@ -368,11 +393,11 @@ else
                         <div class="row">
                             <div class="col-md-6">
                                 <small>Preço de venda</small>
-                                <h3>R$ @item.PrecoVenda</h3>
+                                <h3>R$ @item.PrecoVenda,00</h3>
                             </div>
                             <div class="col-md-6">
                                 <small>Preço de Locação</small>
-                                <h3>R$ @item.PrecoLocacao</h3>
+                                <h3>R$ @item.PrecoLocacao,00</h3>
                             </div>
                         </div>
                         <div class="row">
@@ -380,7 +405,7 @@ else
                             <div>
                                 <ul class="col-md-3 list-group list-group-flush">
                                     <li class="list-group-item">Dormitórios <span class="badge bg-primary rounded-pill">@item.QtdeQuartos</span></li>
-                                    @if(item.QtdeSuites > 0)
+                                    @if (item.QtdeSuites > 0)
                                     {
                                         <li class="list-group-item">Suítes <span class="badge bg-primary rounded-pill">@item.QtdeSuites</span></li>
                                     }
@@ -434,7 +459,7 @@ else
                                 <a class="btn btn-outline-dark col" asp-action="Edit" asp-route-id="@item.PropriedadeId">
                                     <i class="bi bi-pencil"></i> Editar
                                 </a>
-                                <a class="btn btn-dark col" asp-action="Details" asp-route-id="@item.PropriedadeId">
+                                <a class="btn btn-dark col" asp-action="Propriedade" asp-route-id="@item.PropriedadeId">
                                     <i class="bi bi-eye"></i> Ver Detalhes
                                 </a>
                                 <a class="btn btn-outline-danger col" asp-action="Delete" asp-route-id="@item.PropriedadeId">
@@ -449,5 +474,146 @@ else
         <div>
             <vc:pager paging-list="@Model.Propriedades"></vc:pager>
         </div>
-    }
+        }
+    </div>
+
+    <div class="container" id="mobile-view">
+        @foreach (var item in Model.Propriedades)
+        {
+            @if (item.CaminhoImagem != "")
+            {
+                <img src=@item.CaminhoImagem
+                     class="img-fluid rounded-start card-img-top"
+                     alt="Imagem do Imóvel">
+            }
+            else
+            {
+                <img src="/images/not-found.png"
+                     class="img-fluid rounded-start card-img-top"
+                     alt="Nenhuma Imagem">
+            }
+            <div class="card shadow" >
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-9">
+                            @if (item.ParaVenda)
+                            {
+                                <span class="badge bg-primary">Venda</span>
+                            }
+                            @if (item.ParaLocacao)
+                            {
+                                <span class="badge bg-warning">Locação</span>
+                            }
+                            @if (!(item.Vendido || item.Locado))
+                            {
+                                <span class="badge bg-success">Disponível</span>
+                            }
+                            @if (item.AceitaPermuta)
+                            {
+                                <i class="bi bi-arrow-left-right"> Aceita Permuta</i>
+                            }
+                            @if (item.Vendido)
+                            {
+                                <span class="badge bg-danger">Vendido</span>
+                            }
+                            @if (item.Locado)
+                            {
+                                <span class="badge bg-danger">Locado</span>
+                            }
+                        </div>
+                        <div class="col-md-3">
+                            <span>Código: @item.Codigo</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3>@item.Tipo, @item.Bairro, @item.Cidade - @item.Estado</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small>Preço de venda</small>
+                            <h3>R$ @item.PrecoVenda,00</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <small>Preço de Locação</small>
+                            <h3>R$ @item.PrecoLocacao,00</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <br />
+                        <div>
+                            <ul class="col-md-3 list-group list-group-flush">
+                                <li class="list-group-item">Dormitórios <span class="badge bg-primary rounded-pill">@item.QtdeQuartos</span></li>
+                                @if (item.QtdeSuites > 0)
+                                {
+                                    <li class="list-group-item">Suítes <span class="badge bg-primary rounded-pill">@item.QtdeSuites</span></li>
+                                }
+                                <li class="list-group-item">Banheiros <span class="badge bg-primary rounded-pill">@item.QtdeBanheiros</span></li>
+                                <li class="list-group-item">Garagem <span class="badge bg-primary rounded-pill">@item.CapacidadeGaragem</span></li>
+                                @if (item.TemQuintal)
+                                {
+                                    <li class="list-group-item">Quintal</li>
+                                }
+                                @if (item.TemPiscina)
+                                {
+                                    <li class="list-group-item">Piscina</li>
+                                }
+                                @if (item.TemQuadra)
+                                {
+                                    <li class="list-group-item">Quadra Esportiva</li>
+                                }
+                                @if (item.TemSalaoFesta)
+                                {
+                                    <li class="list-group-item">Salão de Festa</li>
+                                }
+                                @if (item.TemAreaGourmet)
+                                {
+                                    <li class="list-group-item">Área Gourmet</li>
+                                }
+                                @if (item.TemChurrasqueira)
+                                {
+                                    <li class="list-group-item">Churrasqueira</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <hr />
+                    <div>
+                        <div class="row">
+                            <h5 class="col-md-6">Proprietário: @item.NomeProprietario</h5>
+                        </div>
+                        <div class="row text-end">
+                            @if (item.CaminhoImagem != "")
+                            {
+                                <a class="btn btn-primary col" asp-action="Index" asp-controller="AdminImagens" asp-route-id="@item.PropriedadeId" aria-disabled="true">
+                                    <i class="bi bi-list"></i> Gerenciar Imagens
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-primary col" asp-action="Upload" asp-controller="AdminImagens" asp-route-id="@item.PropriedadeId">
+                                    <i class="bi bi-upload"></i> Carregar Imagens
+                                </a>
+                            }
+                            <a class="btn btn-outline-dark col" asp-action="Edit" asp-route-id="@item.PropriedadeId">
+                                <i class="bi bi-pencil"></i> Editar
+                            </a>
+                            <a class="btn btn-dark col" asp-action="Propriedade" asp-route-id="@item.PropriedadeId">
+                                <i class="bi bi-eye"></i> Ver Detalhes
+                            </a>
+                            <a class="btn btn-outline-danger col" asp-action="Delete" asp-route-id="@item.PropriedadeId">
+                                <i class="bi bi-trash"></i> Apagar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <hr />
+            <div>
+                <vc:pager paging-list="@Model.Propriedades"></vc:pager>
+            </div>
+        }
+    </div>
 }

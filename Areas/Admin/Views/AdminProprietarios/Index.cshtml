@@ -40,15 +40,23 @@
                             <i class="bi-whatsapp"></i>
                         }
                     </li>
-                    <li class="list-group-item"><b>Outro Telefone</b> @item.OutroTelefone</li>
+                    <li class="list-group-item"><b>Outro Telefone:</b> @item.OutroTelefone</li>
                     <li class="list-group-item"><b>e-mail:</b> @item.Email</li>
-                    <li class="list-group-item"><b>Nascimento:</b> @item.Nascimento</li>
+                    <li class="list-group-item"><b>Nascimento:</b> @item.TextoNascimento</li>
                     <li class="list-group-item"><b>Data de Cadastro:</b> @item.CriadoEm</li>
                     <li class="list-group-item"><b>Última Edição:</b> @item.AtualizadoEm</li>
                     <li class="list-group-item"><small><b>CPF:</b> @item.CPF</small></li>
                     <li class="list-group-item"><small><b>RG:</b> @item.RG</small></li>
                 </ul>
                 <hr />
+                <b>Obervações: </b> <p>@item.Mensagem</p>
+                <hr />
+                @if (item.CadastroSite)
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Este proprietário se cadastrou pelo site.
+                    </div>
+                }
                 <div class="d-flex">
                     <div class="col-md-12 text-end">
                         <a class="btn btn-outline-dark" asp-action="Edit" asp-route-id="@item.ProprietarioId">
@@ -64,6 +72,8 @@
                 </div>
             </div>
         </div>
+        <br />
+        <hr />
     }
     <div>
         <vc:pager paging-list="@Model"></vc:pager>

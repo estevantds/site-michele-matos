@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MiMatos.Context;
@@ -7,6 +8,7 @@ using MiMatos.Models;
 namespace MiMatos.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class AdminCidadesController : Controller
     {
         private readonly AppDbContext _context;

@@ -33,7 +33,7 @@
                             </a>
                         </li>
                         <li class="nav-item fixed-middle">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Alugar">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cliente" asp-action="CreateProp">
                                 <p class="fs-4 text" style="color: #555555">Anunciar um Imóvel</p>
                             </a>
                         </li>
@@ -48,16 +48,16 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container" id="global-content">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
     <footer>
-        <div class="d-flex">
-            <span class="flex-row" style="color: #fff">Todos os direitos reservado &copy; 2023 - Michele Matos - Corretora de Imóveis - CRECI 160413</span>
-            <span class="flex-row-reverse">
+        <div class="d-flex justify-content-between">
+            <span class="flex-row" style="color: #fff; padding-left: 10px">Todos os direitos reservado &copy; 2023 - Michele Matos - Corretora de Imóveis - CRECI 160413</span>
+            <span class="flex-row-reverse" style="padding-right: 10px">
                 @await Html.PartialAsync("_LoginPartial")
             </span>
         </div>

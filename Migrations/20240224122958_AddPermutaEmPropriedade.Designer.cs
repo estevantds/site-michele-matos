@@ -4,6 +4,7 @@ using MiMatos.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MiMatos.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240224122958_AddPermutaEmPropriedade")]
+    partial class AddPermutaEmPropriedade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -617,9 +619,6 @@ namespace MiMatos.Migrations
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
-                    b.Property<bool>("CadastroSite")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Celular")
                         .IsRequired()
                         .HasMaxLength(11)
@@ -634,11 +633,6 @@ namespace MiMatos.Migrations
 
                     b.Property<bool>("IsWhatsApp")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Mensagem")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
 
                     b.Property<DateTime>("Nascimento")
                         .HasColumnType("datetime2");

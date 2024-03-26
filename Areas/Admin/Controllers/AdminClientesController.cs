@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MiMatos.Context;
 using MiMatos.Models;
+using ReflectionIT.Mvc.Paging;
 
 namespace MiMatos.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class AdminClientesController : Controller
     {
         private readonly AppDbContext _context;
@@ -15,10 +18,29 @@ namespace MiMatos.Areas.Admin.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string filter, int pageindex = 1, string sort = "Visualizado")
         {
-            var clientes = _context.Clientes.ToList();
-            return View(clientes.OrderBy(c => c.Visualizado));
+            var resultado = _context.Clientes.AsNoTracking().AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                resultado = resultado.Where(p => p.Nome.Contains(filter));
+            }
+
+            var clientes = await PagingList.CreateAsync(resultado, 5, pageindex, sort, "EditadoEm");
+
+            clientes.RouteValue = new RouteValueDictionary
+            {
+                { "filter", filter }
+            };
+
+            foreach (var item in clientes)
+            {
+                var dateOnly = new DateOnly(item.Nascimento.Year, item.Nascimento.Month, item.Nascimento.Day);
+                item.TextoNascimento = dateOnly.ToString();
+            }
+
+            return View(clientes);
         }
 
         public IActionResult Create()
